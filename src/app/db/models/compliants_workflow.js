@@ -26,12 +26,14 @@ module.exports = (sequelize, DataTypes) => {
       modelName: "Compliants_Workflow",
     }
   );
-  Compliants_Workflow.associate = function (models) {
-    User.hasOne(models.SalesInvoice, {
-      foreignKey: "salesinvoiceid",
-      targetKey: "id",
-    });
-    // associations can be defined here
-  };
+  // Compliants_Workflow.associate = function (models) {
+  //   Compliants_Workflow.associate = function (models) {
+  //     User.hasOne(models.SalesInvoice, {
+  //       foreignKey: "salesInvoiceid",
+  //       targetKey: "id",
+  //     });
+  //   };
+  // };
+  // associations can be defined here
   return Compliants_Workflow;
 };

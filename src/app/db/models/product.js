@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
   }
   Product.init(
     {
-      firstName: DataTypes.STRING,
+      name: DataTypes.STRING,
       category: DataTypes.STRING,
       barcode: DataTypes.UUID,
     },

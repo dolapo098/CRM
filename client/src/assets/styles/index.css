@@ -1,0 +1,37 @@
+.bg-img-right {
+  background-image: url("../images/image\ 4.png");
+  opacity: 7;
+  mix-blend-mode: darken;
+  background-color: #f7ecea;
+}
+
+.submit {
+  background-color: #dda51a;
+}
+
+.bg-img-left {
+  background-color: whitesmoke;
+}
+
+.food_img {
+  width: 300px;
+  margin: auto;
+}
+
+.center-margin {
+  margin: 70px;
+  background-color: floralwhite;
+}
+
+.bg-orange {
+  background-color: #f7f3ea;
+}
+
+.center {
+  margin: 0 auto; /* Added */
+  float: none; /* Added */
+}
+
+.marginRight {
+  margin-right: 10px;
+}

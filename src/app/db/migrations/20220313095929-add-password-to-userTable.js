@@ -8,12 +8,9 @@ module.exports = {
      * Example:
      * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
      */
-    return Promise.all([
-      queryInterface.renameTable(
-        "Compliants_Workflows",
-        "Complaints_Workflows"
-      ),
-    ]);
+    queryInterface.addColumn("Users", "password", {
+      type: Sequelize.STRING,
+    });
   },
 
   async down(queryInterface, Sequelize) {
@@ -23,11 +20,8 @@ module.exports = {
      * Example:
      * await queryInterface.dropTable('users');
      */
-    return Promise.all([
-      queryInterface.renameTable(
-        "Compliants_Workflows",
-        "Complaints_Workflows"
-      ),
-    ]);
+    queryInterface.addColumn("Users", "password", {
+      type: Sequelize.STRING,
+    });
   },
 };

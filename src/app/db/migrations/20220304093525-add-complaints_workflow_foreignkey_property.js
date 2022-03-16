@@ -9,14 +9,14 @@ module.exports = {
      * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
      */
     return Promise.all([
-      queryInterface.changeColumn("Compliants_Workflows", "SalesInvoiceId", {
+      queryInterface.changeColumn("Complaints_Workflows", "salesInvoiceId", {
         type: Sequelize.INTEGER,
         references: {
           model: "SalesInvoices",
           key: "id",
         },
         onUpdate: "CASCADE",
-        onDelete: "SET NULL",
+        onDelete: "CASCADE",
       }),
     ]);
   },
@@ -28,16 +28,16 @@ module.exports = {
      * Example:
      * await queryInterface.dropTable('users');
      */
-    return Promise.all([
-      queryInterface.changeColumn("Compliants_Workflows", "SalesInvoiceId", {
-        type: Sequelize.INTEGER,
-        references: {
-          model: "SalesInvoices",
-          key: "id",
-        },
-        onUpdate: "CASCADE",
-        onDelete: "SET NULL",
-      }),
-    ]);
+    // return Promise.all([
+    //   queryInterface.changeColumn("Compliants_Workflows", "SalesInvoiceId", {
+    //     type: Sequelize.INTEGER,
+    //     references: {
+    //       model: "SalesInvoices",
+    //       key: "id",
+    //     },
+    //     onUpdate: "CASCADE",
+    //     onDelete: "SET NULL",
+    //   }),
+    // ]);
   },
 };

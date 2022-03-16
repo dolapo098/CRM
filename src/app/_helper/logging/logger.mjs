@@ -1,6 +1,6 @@
 import { createLogger, format, transports } from "winston";
 
-//winston Logger: obj used to write info and errors on console/files
+//winston Logger: An npm library  used to logs to log paths  both console/files
 export const logger = createLogger({
   format: format.combine(format.timestamp(), format.json()),
   transports: [
@@ -8,9 +8,12 @@ export const logger = createLogger({
       level: "info",
       filename: "info.log",
     }),
-    new transports.Console(),
-    new transports.File({ filename: "error.log", level: "error" }),
+    new transports.Console({
+      level: "error",
+    }),
+    new transports.File({ level: "error", filename: "error.log" }),
   ],
+
   exceptionHandlers: [
     new transports.Console({
       level: "error",

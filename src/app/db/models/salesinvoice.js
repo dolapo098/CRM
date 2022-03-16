@@ -16,7 +16,6 @@ module.exports = (sequelize, DataTypes) => {
       clientId: DataTypes.INTEGER,
       sellerId: DataTypes.INTEGER,
       productId: DataTypes.INTEGER,
-      quantity: DataTypes.INTEGER,
       amount: DataTypes.DOUBLE,
     },
     {
@@ -24,9 +23,12 @@ module.exports = (sequelize, DataTypes) => {
       modelName: "SalesInvoice",
     }
   );
-  SalesInvoice.belongsTo(models.Product, {
-    foreignKey: "fk_productid",
-    targetKey: "id",
-  });
+  // SalesInvoice.associate = function (models) {
+  //   SalesInvoice.belongsTo(models.Product, {
+  //     foreignKey: "fk_productid",
+  //     targetKey: "id",
+  //   });
+  // };
+
   return SalesInvoice;
 };
