@@ -9,25 +9,50 @@ module.exports = {
         type: Sequelize.INTEGER,
       },
       initiator: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      SalesInvoiceId: {
         type: Sequelize.INTEGER,
         allowNull: false,
+        references: {
+          model: "Users",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
+      },
+      salesInvoiceId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: "SalesInvoices",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
       },
       comment: {
         type: Sequelize.STRING,
         allowNull: true,
       },
-      attachmentIt: {
+      attachmentId: {
         type: Sequelize.STRING,
         allowNull: false,
-        unique: true,
+      },
+      reviewedBy: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: "Users",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
       },
       closedBy: {
-        type: Sequelize.STRING,
-        allowNull: false,
+        type: Sequelize.INTEGER,
+        references: {
+          model: "Users",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
       },
       openedAt: {
         allowNull: false,
@@ -47,7 +72,5 @@ module.exports = {
       },
     });
   },
-  async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("Compliants_Workflows");
-  },
+  async down(queryInterface, Sequelize) {},
 };

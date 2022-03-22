@@ -7,21 +7,26 @@ module.exports = {
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
-        unique: true,
       },
       productId: {
         type: Sequelize.INTEGER,
         allowNull: false,
+        references: {
+          model: "Products",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
       },
       clientId: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        unique: true,
-      },
-      sellerId: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        unique: true,
+        references: {
+          model: "Users",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
       },
       amount: {
         type: Sequelize.DOUBLE,
@@ -37,7 +42,5 @@ module.exports = {
       },
     });
   },
-  async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("SalesInvoices");
-  },
+  async down(queryInterface, Sequelize) {},
 };
