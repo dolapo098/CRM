@@ -14,20 +14,20 @@ router.post(
 //The get users route which binds the midleware for token/role verification and user controller
 router.get(
   "/users",
-  Tokenization.authToken(roles.client),
+  Tokenization.authToken(roles.client_engagement_officer),
   httpRequestCallBack(userController.getAllUsers.bind(userController))
 ); // client enagement officer only
 
 //The get user which binds the middleware for token/role verification and user controller
 router.get(
   "/user",
-  Tokenization.authToken(roles.client),
+  Tokenization.authToken(roles.client_engagement_officer),
   httpRequestCallBack(userController.getUser.bind(userController))
 ); // client enagement officer only
 
 router.post(
   "/fileUpload",
-  Tokenization.authToken(roles.client),
+  Tokenization.authToken(roles.client_engagement_officer),
   MulterUpload.fileConfiguration().single("file"),
   httpRequestCallBack(uploadController.fileUpload.bind(uploadController))
 );
