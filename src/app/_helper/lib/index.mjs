@@ -100,6 +100,7 @@ export class Tokenization {
     // roles param can be a single role string (e.g. Role.User or 'User')
     // or an array of roles (e.g. [Role.Admin, Role.User] or ['Admin', 'User'])
     if (typeof roles === "string") {
+      console.log(roles);
       roles = [roles];
     }
     return [
@@ -113,6 +114,7 @@ export class Tokenization {
         try {
           const decoded = jwt.verify(token, config.get("secretkey"));
           req.user = decoded["user"];
+          console.log(req.user);
           if (roles.length && !roles.includes(req.user.role)) {
             // decoded token does not specify required role for the access level
             throw new ForbiddenError("user does not have sufficient privilege");
