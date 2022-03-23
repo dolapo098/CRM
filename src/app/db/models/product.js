@@ -1,5 +1,8 @@
 "use strict";
 const { Model } = require("sequelize");
+
+//https://www.npmjs.com/package/winston
+//This module is used to define the Product model sequelize use to interact with the db
 module.exports = (sequelize, DataTypes) => {
   class Product extends Model {
     /**

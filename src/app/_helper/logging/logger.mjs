@@ -1,6 +1,6 @@
 import { createLogger, format, transports } from "winston";
 
-//winston Logger: An npm library  used to logs to log paths  both console/files
+//winston Logger: An npm library  used to logs to log paths  both console/files  https://www.npmjs.com/package/winston
 export const logger = createLogger({
   format: format.combine(format.timestamp(), format.json()),
   transports: [

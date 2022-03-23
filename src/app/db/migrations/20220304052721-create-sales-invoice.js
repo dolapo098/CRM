@@ -1,6 +1,8 @@
-"use strict";
+"use strict"; //https://sequelize.org/master/manual/migrations.html   sequelize migration for tracking changes in the db
 module.exports = {
+  //The up method dictates how to perform a migration to the db
   async up(queryInterface, Sequelize) {
+    // logic for creating a SalesInvoice model and its properties
     await queryInterface.createTable("SalesInvoices", {
       id: {
         allowNull: false,
@@ -42,5 +44,6 @@ module.exports = {
       },
     });
   },
+  //The up method dictates how to perform a migration to the db
   async down(queryInterface, Sequelize) {},
 };

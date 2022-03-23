@@ -1,8 +1,7 @@
 import config from "config";
-import jwt from "jsonwebtoken"; //npm js library used for secured communication between two parties
-
-import bcrypt from "bcryptjs"; //npm js library used forpassword hashing
-
+import jwt from "jsonwebtoken"; //npm js library used for secured communication between two parties  https://www.npmjs.com/package/jsonwebtoken
+import bcrypt from "bcryptjs"; //npm js library used for password hashing  https://www.npmjs.com/package/bcrypt
+import multer from "multer"; // https://www.npmjs.com/package/multer A node middleware for handling multipart/form-data, which is primarily used for file uploads
 import {
   InternalServerError,
   MissingParamtersError,
@@ -55,6 +54,7 @@ export class Pagination {
   }
 }
 
+//The module for Password hasing and verification
 export class PasswordValidator {
   static async hashPassword(password) {
     const saltRounds = 10;
@@ -70,6 +70,7 @@ export class PasswordValidator {
     }
   }
 
+  //check if the password saved in the db matches with the password provided by the user
   static async checkPassword(hashedPassword, password) {
     try {
       const match = await bcrypt.compare(password, hashedPassword); // Load hash from your password DB.
@@ -80,7 +81,9 @@ export class PasswordValidator {
   }
 }
 
+//The module for generating token and verifying token
 export class Tokenization {
+  // generate token
   static genToken(payload) {
     try {
       var token = jwt.sign({ user: payload }, config.get("secretkey")); //jwt will encode the claims {payload} for communication
@@ -92,6 +95,7 @@ export class Tokenization {
     }
   }
 
+  //The method is binded to the user routes for security and also verifies it token exist or matches
   static authToken(roles = []) {
     // roles param can be a single role string (e.g. Role.User or 'User')
     // or an array of roles (e.g. [Role.Admin, Role.User] or ['Admin', 'User'])
@@ -120,5 +124,13 @@ export class Tokenization {
         }
       },
     ];
+  }
+}
+
+//The class is used for file upload based on multer library in npm registry
+export class MulterUpload {
+  static fileConfiguration() {
+    const upload = multer({ dest: "./src/app/files" }); //configuration path for saved files
+    return upload;
   }
 }

@@ -7,6 +7,7 @@ import {
 } from "./errorClass.mjs";
 import { ResponseType } from "./index.mjs";
 
+//The module is provided to all contollers for application errors to be updated on the view
 export const errorHandler = (error, logger) => {
   if (error instanceof UniqueConstraintError) {
     logger.error(error.message);

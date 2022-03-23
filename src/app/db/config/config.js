@@ -1,3 +1,4 @@
+//The configuration sequelize used to connect to the database
 module.exports = {
   development: {
     username: "postgres",

@@ -1,27 +1,32 @@
-import { Op } from "sequelize";
+import { Op } from "sequelize"; //https://sequelize.org/master/manual/model-querying-basics.html#operators   symbol operators that can be used for to create more complex
 
+// The components that encapsulate the logic required to access data sources for all specific User operations in the database
 export class UserRepository {
   constructor(db) {
-    this.db = db;
+    this.db = db; //The object used to organise data element for a user  using sequelize
   }
 }
 
+//Get a user by foorstname or phoneNumber from the data source
 UserRepository.prototype.findUser = async function (params) {
-  console.log(params);
-  this.user = await this.db.User.findOne({
+  //https://sequelize.org/v6/manual/model-querying-basics.html
+  const user = await this.db.User.findOne({
     attributes: { exclude: ["password"] },
     where: {
       [Op.or]: [
-        { role: params.role ? params.role : "" },
-        { firstName: params.firstName ? params.firstName : "" },
+        {
+          firstName: params.firstName ? params.firstName : "",
+        },
         { phoneNumber: params.phoneNumber ? params.phoneNumber : "" },
       ],
     },
   });
-  return this.user.dataValues;
+  return user;
 };
 
+//Get a user by the id propertyfrom a data source
 UserRepository.prototype.findUserById = async function (id) {
+  //https://sequelize.org/v6/manual/model-querying-basics.html
   this.user = await this.db.User.findOne({
     attributes: { exclude: ["password"] },
     where: {
@@ -31,21 +36,23 @@ UserRepository.prototype.findUserById = async function (id) {
   return this.user;
 };
 
+// Get all users from the data source
 UserRepository.prototype.findAllUsers = async function () {
+  //https://sequelize.org/v6/manual/model-querying-basics.html
   this.listUsers = await this.db.User.findAll({
     attributes: { exclude: ["password"] },
-    order: [["firstName", "DESC"]],
   });
   return this.listUsers;
 };
 
+//Get all users from the data source with linit and count properties for pagination
 UserRepository.prototype.findAllUsersByPagination = async function (
   offset,
   limit
 ) {
+  //https://sequelize.org/v6/manual/model-querying-basics.html
   this.listUsers = await this.db.User.findAndCountAll({
     attributes: { exclude: ["password"] },
-    order: [["firstName", "DESC"]],
     offset: offset,
     limit: limit,
   });

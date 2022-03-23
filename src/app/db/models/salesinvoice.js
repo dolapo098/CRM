@@ -1,5 +1,9 @@
 "use strict";
 const { Model } = require("sequelize");
+
+//https://sequelize.org/master/manual/model-basics.html
+//This module is used to define the Sales Invoice model sequelize use to interact with the db
+
 module.exports = (sequelize, DataTypes) => {
   class SalesInvoice extends Model {
     /**

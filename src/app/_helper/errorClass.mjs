@@ -1,5 +1,6 @@
 //specified custom errors for the application
 
+//Error class for any resource which already exists in the application
 export class UniqueConstraintError extends Error {
   constructor(message, statusCode = 400) {
     super(message);
@@ -9,8 +10,9 @@ export class UniqueConstraintError extends Error {
   }
 }
 
+//Error class if a resource cannot be found in the application
 export class MissingResourceError extends Error {
-  constructor(message, statusCode) {
+  constructor(message, statusCode = 400) {
     super(message);
     this.name = "MissingResourceError";
     this.message = message || "No results found";
@@ -18,6 +20,7 @@ export class MissingResourceError extends Error {
   }
 }
 
+//Error class for validation
 export class ValidationError extends Error {
   constructor(message, statusCode = 400) {
     super(message);
@@ -27,6 +30,7 @@ export class ValidationError extends Error {
   }
 }
 
+//Error class for any missing parameter not attached to user requests
 export class MissingParamtersError extends Error {
   constructor(message, statusCode = 400) {
     super(message);
@@ -36,6 +40,7 @@ export class MissingParamtersError extends Error {
   }
 }
 
+//Error class for any strange error that occured with the application
 export class InternalServerError extends Error {
   constructor(message, statusCode = 500) {
     super(message);
@@ -47,6 +52,7 @@ export class InternalServerError extends Error {
   }
 }
 
+//Error class for unauthorized access to the application
 export class UnauthorizedError extends Error {
   constructor(message, statusCode = 401) {
     super(message);
@@ -56,6 +62,7 @@ export class UnauthorizedError extends Error {
   }
 }
 
+// Error class for forbiden requests sent to the application
 export class ForbiddenError extends Error {
   constructor(message, statusCode = 403) {
     super(message);

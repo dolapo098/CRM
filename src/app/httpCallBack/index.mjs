@@ -1,3 +1,4 @@
+//The middleware is used to access the request and response objects which any specific contoller used to update both views and models
 export function httpRequestCallBack(controller) {
   return async (req, res) => {
     const httpRequest = {
@@ -7,6 +8,7 @@ export function httpRequestCallBack(controller) {
       ip: req.ip,
       path: req.path,
       method: req.method,
+      files: req.file,
       headers: {
         "Content-Type": req.get("Content-Type"),
         Referer: req.get("referer"),
@@ -18,9 +20,12 @@ export function httpRequestCallBack(controller) {
       if (httpResponse) {
         res.set(httpResponse.headers);
         res.type("json");
+
+        //response sent to the client based on a success call
         res.status(httpResponse.statusCode).send(httpResponse.body);
       }
     } catch (err) {
+      //response sent to the client based on an error type thrown in the application
       res.status(err.statusCode).send(err.data);
     }
   };

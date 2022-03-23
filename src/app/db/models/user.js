@@ -1,5 +1,9 @@
 "use strict";
 const { Model } = require("sequelize");
+
+//https://www.npmjs.com/package/winston
+//The module defines the User model ---> sequelize documentation
+
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     /**

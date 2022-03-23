@@ -1,5 +1,5 @@
 export class ResponseType {
-  //prepare response results to be sent to the client
+  //static method for Json responses used by the controller
   static responseIsJson(data) {
     return {
       headers: {
@@ -13,6 +13,7 @@ export class ResponseType {
     };
   }
 
+  //static response for http 400 error code bad requests used by the controller
   static badRequest(err) {
     return {
       headers: {
@@ -26,6 +27,7 @@ export class ResponseType {
     };
   }
 
+  //static response for http 404 error code used by the controller
   static notFound(err) {
     return {
       headers: {
@@ -39,6 +41,7 @@ export class ResponseType {
     };
   }
 
+  //static response for http 500 internal server error used by the contoller
   static internalServerError(err) {
     return {
       headers: {
