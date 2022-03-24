@@ -8,7 +8,9 @@ import {
   ValidationError,
   UnauthorizedError,
   ForbiddenError,
-} from "../errorClass.mjs";
+  errorHandler,
+  logger,
+} from "../index.mjs";
 
 export class FieldValidator {
   static validateRequiredFields(reqFields = [], obj = {}) {
@@ -100,7 +102,6 @@ export class Tokenization {
     // roles param can be a single role string (e.g. Role.User or 'User')
     // or an array of roles (e.g. [Role.Admin, Role.User] or ['Admin', 'User'])
     if (typeof roles === "string") {
-      console.log(roles);
       roles = [roles];
     }
     return [
@@ -108,21 +109,21 @@ export class Tokenization {
         const token = req.headers["x-access-token"];
         if (!token) {
           // if token is not provided
-          throw new UnauthorizedError("no token authorizationsent");
+          throw new UnauthorizedError("no token authorization sent");
         }
 
         try {
           const decoded = jwt.verify(token, config.get("secretkey"));
           req.user = decoded["user"];
-          console.log(req.user);
           if (roles.length && !roles.includes(req.user.role)) {
             // decoded token does not specify required role for the access level
-            throw new ForbiddenError("user does not have sufficient privilege");
+            const message = "user does not have sufficient privilege";
+            throw new ForbiddenError(message);
           }
 
           next();
         } catch (err) {
-          throw new InternalServerError(`${err.message} token not valid`);
+          res.status(err.statusCode).send(err.message);
         }
       },
     ];
@@ -132,7 +133,17 @@ export class Tokenization {
 //The class is used for file upload based on multer library in npm registry
 export class MulterUpload {
   static fileConfiguration() {
-    const upload = multer({ dest: "./src/app/files" }); //configuration path for saved files
+    const storage = multer.diskStorage({
+      destination: function (req, file, cb) {
+        cb(null, "./src/app/files"); //configuration path for saved files
+      },
+      filename: function (req, file, cb) {
+        const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+        cb(null, file.fieldname + "-" + uniqueSuffix);
+      },
+    });
+
+    const upload = multer({ storage: storage }); //configuration path for saved files
     return upload;
   }
 }

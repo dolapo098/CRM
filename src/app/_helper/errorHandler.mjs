@@ -4,6 +4,8 @@ import {
   MissingResourceError,
   ValidationError,
   InternalServerError,
+  UnauthorizedError,
+  ForbiddenError,
 } from "./errorClass.mjs";
 import { ResponseType } from "./index.mjs";
 
@@ -13,6 +15,9 @@ export const errorHandler = (error, logger) => {
     logger.error(error.message);
     return ResponseType.badRequest(error);
   } else if (error instanceof MissingParamtersError) {
+    logger.error(error.message);
+    return ResponseType.badRequest(error);
+  } else if (error instanceof ForbiddenError) {
     logger.error(error.message);
     return ResponseType.badRequest(error);
   } else if (error instanceof MissingResourceError) {
