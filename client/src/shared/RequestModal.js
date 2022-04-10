@@ -1,8 +1,7 @@
 import React from "react";
 import { Modal } from "react-bootstrap";
 
-export function NewRequest(props) {
-  console.log(props.show);
+export function RequestModal(props) {
   const handleClose = () => {
     props.close(false);
   };
@@ -81,7 +80,6 @@ export function NewRequest(props) {
           </Modal.Body>
         </Modal>
       </>
-      );
     </React.Fragment>
   );
 }

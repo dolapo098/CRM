@@ -35,3 +35,15 @@
 .marginRight {
   margin-right: 10px;
 }
+
+#form_input {
+  width: 100% !important;
+}
+
+.form-group {
+  width: 90%;
+}
+
+thead tr {
+  border-style: hidden;
+}
