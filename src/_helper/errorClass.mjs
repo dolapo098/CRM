@@ -26,7 +26,7 @@ export class ValidationError extends Error {
     super(message);
     this.name = "ValidationError";
     this.message = message || "validation failed";
-    this.statusCode = statusCode;
+    this.statusCode = 400 || statusCode;
   }
 }
 

@@ -7,21 +7,42 @@ import {
   FoodTaster,
 } from "../ManageRequest";
 import { Home } from "../HomePage";
+import { roles } from "../../_helper";
 
 export function CustomRoute() {
   return (
     <React.Fragment>
-      <PrivateRoute path='/' component={Home}></PrivateRoute>
-      <PrivateRoute path='/initiator' component={Initiator}></PrivateRoute>;
       <PrivateRoute
-        path='/clientengamentofficer'
+        exact
+        path='/'
+        roles={[
+          roles.client,
+          roles.client_engagement_officer,
+          roles.food_processing_officer,
+        ]}
+        component={Home}
+      ></PrivateRoute>
+      <PrivateRoute
+        path='/initiator'
+        roles={[roles.client]}
+        component={Initiator}
+      ></PrivateRoute>
+
+      <PrivateRoute
+        path='/clientengagementofficer'
+        roles={[roles.client_engagement_officer]}
         component={ClientEngagementOfficer}
       ></PrivateRoute>
       <PrivateRoute
         path='/foodprocessingofficer'
+        roles={[roles.food_processing_officer]}
         component={FoodProcessingOfficer}
       ></PrivateRoute>
-      <PrivateRoute path='/foodtaster' component={FoodTaster}></PrivateRoute>;
+      <PrivateRoute
+        path='/foodtaster'
+        roles={[roles.food_taster]}
+        component={FoodTaster}
+      ></PrivateRoute>
     </React.Fragment>
   );
 }

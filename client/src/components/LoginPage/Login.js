@@ -1,11 +1,35 @@
 import React from "react";
+import { Formik, Form } from "formik"; //https://formik.org/ //Formik is a small group of React components and hooks for building forms in React
+import * as yup from "yup"; //https://www.npmjs.com/package/yup#api
+import { history } from "../../_helper";
 import food_img from "../../assets/images/dude.png";
 import productLogo from "../../assets/images/fooddesign.png";
+import { TextField, ButtonSubmit } from "../../shared/_formcomponents";
+import { authenticationService } from "../../_services";
 
-export function Login() {
+export function Login(props) {
+  //validate the form fields via formik library
+  let validateSchema = yup.object().shape({
+    firstName: yup.string().required(),
+    password: yup.string().required(),
+  });
+
+  //submit the form fields via formik library
+  const onSubmit = ({ firstName, password }, { setStatus, setSubmitting }) => {
+    setStatus();
+    authenticationService.login(firstName, password).then(
+      (user) => {
+        user && history.push("/");
+      },
+      (error) => {
+        setSubmitting(false);
+        setStatus(error);
+      }
+    );
+  };
   return (
     <React.Fragment>
-      <div className='container-fluid'>
+      <div className='container'>
         <div className='row flex-wrap'>
           <div className='col-md-6 bg-img-left'>
             <div className='card mt-5'>
@@ -15,45 +39,44 @@ export function Login() {
               </div>
               <div className='card-body'>
                 <h5 className='card-title mb-5'>Login to Continue</h5>
-                <div className='mb-3'>
-                  <label for='exampleFormControlInput1' className='form-label'>
-                    Username
-                  </label>
-                  <input
-                    type='text'
-                    className='form-control'
-                    id='exampleFormControlInput1'
-                    placeholder='name@example.com'
-                  />
-                </div>
-                <div className='mb-3'>
-                  <label
-                    for='exampleFormControlTextarea1'
-                    className='form-label'
-                  >
-                    Password
-                  </label>
-                  <input
-                    type='password'
-                    className='form-control'
-                    id='exampleFormControlInput1'
-                    placeholder='name@example.com'
-                  />
-                </div>
-                <div className='mt-5 '>
-                  <button
-                    type='submit'
-                    className='form-control form-control-sm submit'
-                  >
-                    Send
-                  </button>
-                </div>
+
+                <Formik
+                  initialValues={{ firstName: "", password: "" }}
+                  validationSchema={validateSchema}
+                  onSubmit={onSubmit}
+                >
+                  {({ status, isSubmitting }) => (
+                    <Form>
+                      <TextField
+                        fieldtype='input'
+                        label='FirstName'
+                        name='firstName'
+                        placeholder='Enter Firstname'
+                      />
+                      <TextField
+                        fieldtype='input'
+                        label='Password'
+                        name='password'
+                        type='password'
+                        placeholder='Enter Password'
+                      />
+                      <ButtonSubmit isSubmitting={isSubmitting} />
+                      {status && (
+                        <div className={"alert alert-danger"}>{status}</div>
+                      )}
+                    </Form>
+                  )}
+                </Formik>
               </div>
             </div>
           </div>
           <div className='col-md-6 bg-img-right d-none d-md-block'>
             <div className='card w-75 center-margin'>
-              <img src={food_img} class='card-img-top food_img' alt='food' />
+              <img
+                src={food_img}
+                className='card-img-top food_img'
+                alt='pizza'
+              />
             </div>
           </div>
         </div>

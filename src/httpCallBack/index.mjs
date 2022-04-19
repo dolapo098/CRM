@@ -16,6 +16,7 @@ export function httpRequestCallBack(controller) {
       },
       loggedinuser: req.user,
     };
+
     try {
       const httpResponse = await controller(httpRequest);
       if (httpResponse) {

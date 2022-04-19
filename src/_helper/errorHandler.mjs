@@ -22,7 +22,7 @@ export const errorHandler = (error, logger) => {
     return ResponseType.badRequest(error);
   } else if (error instanceof MissingResourceError) {
     logger.error("error", error.message);
-    return ResponseType.notFound(error);
+    return ResponseType.badRequest(error);
   } else if (error instanceof ValidationError) {
     logger.error(error.message);
     return ResponseType.badRequest(error);

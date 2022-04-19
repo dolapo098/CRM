@@ -2,10 +2,12 @@ import {
   MissingResourceError,
   ForbiddenError,
   UnauthorizedError,
+  UniqueConstraintError,
   ValidationError,
   roles,
+  state,
+  status,
 } from "../_helper/index.mjs";
-import { status, state } from "../_helper/index.mjs";
 
 export class ComplaintService {
   constructor(
@@ -14,7 +16,8 @@ export class ComplaintService {
     salesInvoiceRepository,
     complaintsRepository,
     pagination,
-    workFlowContext
+    workFlowContext,
+    mapDataFromRows
   ) {
     this._fieldValidator = fieldValidator;
     this._userRepository = userRepository;
@@ -22,6 +25,7 @@ export class ComplaintService {
     this._complaintsRepository = complaintsRepository;
     this._pagination = pagination;
     this._workFlowContext = workFlowContext;
+    this._mapDataFromRows = mapDataFromRows;
   }
 }
 
@@ -44,6 +48,19 @@ ComplaintService.prototype.makeComplaints = async function (params) {
     throw new MissingResourceError(message);
   }
 
+  const listInvoice = await this._complaintsRepository.findAllComplaints(
+    params
+  );
+
+  //check if the sales invoice id exist in the complaints table
+  listInvoice.forEach((val) => {
+    if (val.dataValues.salesInvoiceId === parseInt(params.salesInvoiceId)) {
+      throw new UniqueConstraintError(
+        `The request with sales invoice no : ${params.salesInvoiceId} already exists `
+      );
+    }
+  });
+
   if (invoice.dataValues.clientId !== user.dataValues.id) {
     const message = "access denied";
     throw new ForbiddenError(message);
@@ -61,7 +78,7 @@ ComplaintService.prototype.makeComplaints = async function (params) {
 
 //The method to review all type of request
 ComplaintService.prototype.reviewRequest = async function (params) {
-  let reqFields = ["state", "reviewedBy", "comment", "id"];
+  let reqFields = ["state", "reviewedBy", "id"];
   this._fieldValidator.validateRequiredFields(reqFields, params);
 
   const user = await this._userRepository.findUserById(params.reviewedBy);
@@ -79,8 +96,14 @@ ComplaintService.prototype.reviewRequest = async function (params) {
     throw new MissingResourceError(message);
   }
 
-  if (complaint.dataValues.state === params.state) {
-    console.log("i entered here");
+  console.log(complaint.dataValues);
+
+  if (complaint.dataValues.state === "complete") {
+    throw new ValidationError("Work flow cycle is completed");
+  } else if (
+    complaint.dataValues.state !== "complete" &&
+    complaint.dataValues.state === params.state
+  ) {
     throw new ValidationError(" request is presently awaiting a review");
   }
 
@@ -92,8 +115,7 @@ ComplaintService.prototype.reviewRequest = async function (params) {
   });
 
   //https://sequelize.org/docs/v6/core-concepts/model-instances/  to update the records in the database
-  complaint.set(newParams);
-  let result = await complaint.save();
+  let result = await complaint.update(newParams);
   return result.dataValues;
 };
 
@@ -111,7 +133,9 @@ ComplaintService.prototype.getComplaintById = async function (params) {
 
 ComplaintService.prototype.getAllComplaints = async function (params) {
   let reqFields = ["page", "pageSize"];
+
   this._fieldValidator.validateRequiredFields(reqFields, params);
+
   const { limit, offset } = this._pagination.getPagination(
     parseInt(params.page),
     parseInt(params.pageSize)
@@ -129,6 +153,103 @@ ComplaintService.prototype.getAllComplaints = async function (params) {
   }
 
   let dataItems = this._pagination.mapRowsDataValues(result.rows);
-  let pagObj = this._pagination.getPagingData(dataItems, params.page, limit);
-  return { data: dataItems, metaData: pagObj };
+  let pagObj = this._pagination.getPagingData(
+    result.count,
+    parseInt(params.page),
+    limit
+  );
+  return { items: dataItems, metaData: pagObj };
+};
+
+ComplaintService.prototype.clientOfficerViewComplaints = async function (
+  params
+) {
+  let reqFields = ["page", "pageSize"];
+
+  this._fieldValidator.validateRequiredFields(reqFields, params);
+  const { limit, offset } = this._pagination.getPagination(
+    parseInt(params.page),
+    parseInt(params.pageSize)
+  );
+
+  const result = await this._complaintsRepository.complaintsByPagination(
+    params,
+    offset,
+    limit,
+    status.awaitingClientEngagementOfficer
+  );
+
+  if (result === null) {
+    const message = "record does not exist ";
+    throw new MissingResourceError(message);
+  }
+
+  let dataItems = this._pagination.mapRowsDataValues(result.rows);
+
+  let pagObj = this._pagination.getPagingData(
+    result.count,
+    parseInt(params.page),
+    limit
+  );
+  return { items: dataItems, metaData: pagObj };
+};
+
+ComplaintService.prototype.foodOfficerViewComplaints = async function (params) {
+  let reqFields = ["page", "pageSize"];
+
+  this._fieldValidator.validateRequiredFields(reqFields, params);
+  const { limit, offset } = this._pagination.getPagination(
+    parseInt(params.page),
+    parseInt(params.pageSize)
+  );
+
+  const result = await this._complaintsRepository.complaintsByPagination(
+    params,
+    offset,
+    limit,
+    status.awaitngFoodProcessingOfficer
+  );
+
+  if (result === null) {
+    const message = "record does not exist ";
+    throw new MissingResourceError(message);
+  }
+
+  let dataItems = this._pagination.mapRowsDataValues(result.rows);
+  let pagObj = this._pagination.getPagingData(
+    result.count,
+    parseInt(params.page),
+    limit
+  );
+  return { items: dataItems, metaData: pagObj };
+};
+
+ComplaintService.prototype.foodTasterViewComplaints = async function (params) {
+  let reqFields = ["page", "pageSize"];
+
+  this._fieldValidator.validateRequiredFields(reqFields, params);
+  const { limit, offset } = this._pagination.getPagination(
+    parseInt(params.page),
+    parseInt(params.pageSize)
+  );
+
+  const result = await this._complaintsRepository.complaintsByPagination(
+    params,
+    offset,
+    limit,
+    status.awaitingFoodTaster
+  );
+
+  if (result === null) {
+    const message = "record does not exist ";
+    throw new MissingResourceError(message);
+  }
+
+  let dataItems = this._pagination.mapRowsDataValues(result.rows);
+  let pagObj = this._pagination.getPagingData(
+    result.count,
+    parseInt(params.page),
+    limit
+  );
+  return { items: dataItems, metaData: pagObj };
 };

@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken"; //npm js library used for secured communication 
 import bcrypt from "bcryptjs"; //npm js library used for password hashing  https://www.npmjs.com/package/bcrypt
 import multer from "multer"; // https://www.npmjs.com/package/multer A node middleware for handling multipart/form-data, which is primarily used for file uploads
 import * as path from "path";
-
+import { status } from "../data/status.mjs";
 import {
   InternalServerError,
   MissingParamtersError,
@@ -40,10 +40,10 @@ export class Pagination {
   };
 
   static getPagingData = function (data, page, limit) {
-    const totalItems = data.length;
+    const totalItems = data;
     const currentPage = page ? page : 1;
     const totalPages = Math.ceil(totalItems / limit);
-    return { totalItems, totalPages, currentPage };
+    return { totalItems, totalPages, currentPage, itemsPerPage: limit };
   };
 
   static mapRowsDataValues(rows = []) {
@@ -52,6 +52,53 @@ export class Pagination {
       rows.forEach((val) => {
         data.push(val.dataValues);
       });
+      return data;
+    } else {
+      return rows;
+    }
+  }
+}
+
+export class MapDataFromRows {
+  static filterForClientOfficer(rows = []) {
+    let data = [];
+    if (rows.length > 0) {
+      rows.forEach((val) => {
+        if (
+          val.dataValues.status === status.awaitingClientEngagementOfficer ||
+          val.dataValues.status === status.complete
+        )
+          data.push(val.dataValues);
+      });
+      return data;
+    }
+  }
+
+  static filterForFoodProcessingOfficer(rows = []) {
+    let data = [];
+    if (rows.length > 0) {
+      rows.forEach((val) => {
+        if (
+          val.dataValues.status === status.awaitngFoodProcessingOfficer ||
+          val.dataValues.status === status.complete
+        )
+          data.push(val.dataValues);
+      });
+      return data;
+    }
+  }
+
+  static filterForFoodTaster(rows = []) {
+    let data = [];
+    if (rows.length > 0) {
+      rows.forEach((val) => {
+        if (
+          val.dataValues.status === status.awaitingFoodTaster ||
+          val.dataValues.status === status.complete
+        )
+          data.push(val.dataValues);
+      });
+
       return data;
     }
   }

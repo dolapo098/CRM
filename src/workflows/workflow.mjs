@@ -11,9 +11,10 @@ export class ComplaintsWorkFlow {
 
   manageRequest(params) {
     let newParams;
-    newParams = this.currentState.approve(params);
-    newParams = this.currentState.reject(params);
-    return newParams;
+
+    this.currentState.approve(params);
+    this.currentState.reject(params);
+    return params;
   }
 }
 
@@ -29,16 +30,19 @@ ClientEngagementOfficer.prototype.approve = function (params) {
     params.status === status.awaitingClientEngagementOfficer
   ) {
     params.status = status.awaitngFoodProcessingOfficer;
-    this._complaintsRequest.change(
-      new FoodProcessingOfficer(this._complaintsRequest),
-      params
-    );
     return params;
   }
+  this._complaintsRequest.change(
+    new FoodProcessingOfficer(this._complaintsRequest),
+    params
+  );
 };
 
 ClientEngagementOfficer.prototype.reject = function (params) {
-  return params;
+  this._complaintsRequest.change(
+    new FoodProcessingOfficer(this._complaintsRequest),
+    params
+  );
 };
 
 class FoodProcessingOfficer {
@@ -47,17 +51,14 @@ class FoodProcessingOfficer {
   }
 }
 FoodProcessingOfficer.prototype.approve = function (params) {
-  if (
-    params.state === state.approvedByFoodProcessingOfficer &&
-    params.status === status.awaitngFoodProcessingOfficer
-  ) {
+  if (params.state === state.approvedByFoodProcessingOfficer) {
     params.status = status.awaitingFoodTaster;
-    this._complaintsRequest.change(
-      new FoodTaster(this._complaintsRequest),
-      params
-    );
+    return params;
   }
-  return params;
+  this._complaintsRequest.change(
+    new FoodTaster(this._complaintsRequest),
+    params
+  );
 };
 
 FoodProcessingOfficer.prototype.reject = function (params) {
@@ -66,12 +67,12 @@ FoodProcessingOfficer.prototype.reject = function (params) {
     params.status === status.awaitngFoodProcessingOfficer
   ) {
     params.status = status.awaitingClientEngagementOfficer;
-    this._complaintsRequest.change(
-      new FoodTaster(this._complaintsRequest),
-      params
-    );
+    return params;
   }
-  return params;
+  this._complaintsRequest.change(
+    new FoodTaster(this._complaintsRequest),
+    params
+  );
 };
 
 class FoodTaster {
@@ -82,12 +83,13 @@ class FoodTaster {
 
 FoodTaster.prototype.approve = function (params) {
   if (
-    params.status === state.complete &&
+    params.state === state.complete &&
     params.status === status.awaitingFoodTaster
   ) {
+    console.log(" i entred food  taster");
     params.status = status.complete;
     params.closedBy = params.reviewedBy;
-    params.dateClosed = new Date();
+    params.dateClosed = new Date().toISOString();
   }
   return params;
 };
@@ -98,10 +100,6 @@ FoodTaster.prototype.reject = function (params) {
     params.status === status.awaitingFoodTaster
   ) {
     params.status = status.awaitngFoodProcessingOfficer;
-    this._complaintsRequest.change(
-      new FoodProcessingOfficer(this._complaintsRequest),
-      params
-    );
   }
   return params;
 };

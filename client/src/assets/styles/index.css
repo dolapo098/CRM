@@ -44,6 +44,32 @@
   width: 90%;
 }
 
-thead tr {
+/* thead tr {
   border-style: hidden;
+} */
+
+.leftCol {
+  min-height: 550px;
+}
+
+th {
+  font-weight: normal;
+}
+
+table thead {
+  background-color: #ddd;
+  padding: 10px;
+  width: 30px;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+table td {
+  /* border: 1px solid #ddd; */
+  padding: 1px;
+  color: #083c41;
+  width: 30px;
+  overflow: hidden;
+  white-space: nowrap;
+  margin: 5px;
 }

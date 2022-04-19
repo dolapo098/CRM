@@ -52,13 +52,15 @@ ComplaintsRepository.prototype.findComplaintsById = async function (id) {
 ComplaintsRepository.prototype.findAllComplaints = async function (params) {
   //https://sequelize.org/v6/manual/model-querying-basics.html
   const result = await this.db.Complaints_Workflow.findAll({
-    order: [["createdAt", "DESC"]],
+    order: [["createdAt", "ASC"]],
     where: {
       [Op.or]: [
-        { salesInvoiceId: params.salesInvoiceId ? params.salesInvoiceId : "" },
-        { initiator: params.initiator ? params.initiator : "" },
-        { closedBy: params.closedBy ? params.closedBy : "" },
-        { reviewedBy: params.reviewedBy ? params.reviewedBy : "" },
+        {
+          salesInvoiceId: params.salesInvoiceId ? params.salesInvoiceId : null,
+        },
+        { initiator: params.initiator ? params.initiator : null },
+        { closedBy: params.closedBy ? params.closedBy : null },
+        { reviewedBy: params.reviewedBy ? params.reviewedBy : null },
       ],
     },
   });
@@ -69,38 +71,54 @@ ComplaintsRepository.prototype.findAllComplaints = async function (params) {
 ComplaintsRepository.prototype.complaintsByPagination = async function (
   params,
   offset,
-  limit
+  limit,
+  status = null
 ) {
-  let result;
-
-  if (
-    "salesInvoiceId" in params ||
-    "initiator" in params ||
-    "closedBy" in params ||
-    "reviewedBy" in params
-  ) {
-    //https://sequelize.org/v6/manual/model-querying-basics.html
-    result = await this.db.Complaints_Workflow.findAndCountAll({
-      order: [["createdAt", "DESC"]],
-      where: {
-        [Op.or]: [
-          { initiator: params.initiator ? parseInt(params.initiator) : 0 },
-          { closedBy: params.closedBy ? parseInt(params.closedBy) : null },
-          {
-            reviewedBy: params.reviewedBy ? parseInt(params.reviewedBy) : null,
-          },
-        ],
-      },
-      offset: offset,
-      limit: limit,
-    });
-    return result;
-  } else {
-    result = await this.db.Complaints_Workflow.findAndCountAll({
-      order: [["createdAt", "DESC"]],
-      offset: offset,
-      limit: limit,
-    });
-    return result;
+  try {
+    let result;
+    console.log(status);
+    if (
+      "salesInvoiceId" in params ||
+      "initiator" in params ||
+      "closedBy" in params ||
+      "reviewedBy" in params
+    ) {
+      //https://sequelize.org/v6/manual/model-querying-basics.html
+      result = await this.db.Complaints_Workflow.findAndCountAll({
+        order: [["createdAt", "ASC"]],
+        where: {
+          status: status,
+          [Op.or]: [
+            {
+              initiator: params.salesInvoiceId
+                ? parseInt(params.salesInvoiceId)
+                : null,
+            },
+            { initiator: params.initiator ? parseInt(params.initiator) : 0 },
+            { closedBy: params.closedBy ? parseInt(params.closedBy) : null },
+            {
+              reviewedBy: params.reviewedBy
+                ? parseInt(params.reviewedBy)
+                : null,
+            },
+          ],
+        },
+        offset: offset,
+        limit: limit,
+      });
+      return result;
+    } else {
+      result = await this.db.Complaints_Workflow.findAndCountAll({
+        order: [["createdAt", "ASC"]],
+        offset: offset,
+        limit: limit,
+        where: {
+          status: status,
+        },
+      });
+      return result;
+    }
+  } catch (err) {
+    console.log(err);
   }
 };

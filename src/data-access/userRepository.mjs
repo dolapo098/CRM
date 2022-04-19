@@ -45,16 +45,49 @@ UserRepository.prototype.findAllUsers = async function () {
   return result;
 };
 
+// //Get all users from the data source with linit and count properties for pagination
+// UserRepository.prototype.findAllUsersByPagination = async function (
+//   offset,
+//   limit
+// ) {
+//   //https://sequelize.org/v6/manual/model-querying-basics.html
+//   const result = await this.db.User.findAndCountAll({
+//     attributes: { exclude: ["password"] },
+//     offset: offset,
+//     limit: limit,
+//   });
+//   return result;
+// };
+
 //Get all users from the data source with linit and count properties for pagination
 UserRepository.prototype.findAllUsersByPagination = async function (
+  params,
   offset,
   limit
 ) {
-  //https://sequelize.org/v6/manual/model-querying-basics.html
-  const result = await this.db.User.findAndCountAll({
-    attributes: { exclude: ["password"] },
-    offset: offset,
-    limit: limit,
-  });
-  return result;
+  let result;
+  if (params) {
+    //https://sequelize.org/v6/manual/model-querying-basics.html
+    result = await this.db.User.findAndCountAll({
+      order: [["createdAt", "ASC"]],
+      where: {
+        [Op.or]: [
+          {
+            firstName: params,
+          },
+          { phoneNumber: params },
+        ],
+      },
+      offset: offset,
+      limit: limit,
+    });
+    return result;
+  } else {
+    result = await this.db.User.findAndCountAll({
+      order: [["createdAt", "ASC"]],
+      offset: offset,
+      limit: limit,
+    });
+    return result;
+  }
 };

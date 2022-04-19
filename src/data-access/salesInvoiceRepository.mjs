@@ -17,7 +17,7 @@ SalesInvoiceRepository.prototype.findInvoiceById = async function (id) {
 
 SalesInvoiceRepository.prototype.findAllInvoice = async function () {
   this.listInvoices = await this.db.SalesInvoice.findAll({
-    order: [["createdAt", "DESC"]],
+    order: [["createdAt", "ASC"]],
     where: {
       [Op.or]: [
         { productId: params.productId ? params.productId : "" },
@@ -34,7 +34,7 @@ SalesInvoiceRepository.prototype.findAllUsersByPagination = async function (
   limit
 ) {
   this.listInvoices = await this.db.SalesInvoice.findAndCountAll({
-    order: [["createdAt", "DESC"]],
+    order: [["createdAt", "ASC"]],
     where: {
       [Op.or]: [
         { productId: params.productId ? params.productId : "" },

@@ -21,7 +21,7 @@ router.post(
 //The get users route which binds the midleware for token/role verification and user controller
 router.get(
   "/users",
-  Tokenization.authToken(roles.client_engagement_officer),
+  Tokenization.authToken(roles.client),
   httpRequestCallBack(userController.getAllUsers.bind(userController))
 ); // client enagement officer only
 
@@ -42,7 +42,12 @@ router.post(
 
 router.get(
   "/download",
-  Tokenization.authToken(roles.client),
+  Tokenization.authToken([
+    roles.client,
+    roles.client_engagement_officer,
+    roles.food_processing_officer,
+    roles.food_taster,
+  ]),
   httpRequestContentDisposition(
     uploadController.download.bind(uploadController)
   )
@@ -77,7 +82,7 @@ router.post(
 
 //The  post complaints reviw request for food taster which binds the middleware for token/role verification and compalints controller
 router.post(
-  "/complaints/review/foodprocessingofficer/:id",
+  "/complaints/review/foodtaster/:id",
   Tokenization.authToken(roles.food_taster),
   httpRequestCallBack(
     complaintsController.manageRequest.bind(complaintsController)
@@ -87,16 +92,45 @@ router.post(
 //The get all complaints request which binds the middleware for token/role verification and compalints controller
 router.get(
   "/complaints",
-  Tokenization.authToken(roles.client_engagement_officer),
+  Tokenization.authToken(roles.client),
   httpRequestCallBack(
     complaintsController.getAllComplaints.bind(complaintsController)
+  )
+);
+
+router.get(
+  "/clientofficer/complaints",
+  Tokenization.authToken(roles.client_engagement_officer),
+  httpRequestCallBack(
+    complaintsController.clientOfficerViewComplaints.bind(complaintsController)
+  )
+);
+
+router.get(
+  "/foodofficer/complaints",
+  Tokenization.authToken(roles.food_processing_officer),
+  httpRequestCallBack(
+    complaintsController.foodOfficerViewComplaints.bind(complaintsController)
+  )
+);
+
+router.get(
+  "/foodtaster/complaints",
+  Tokenization.authToken(roles.food_taster),
+  httpRequestCallBack(
+    complaintsController.foodTasterViewComplaints.bind(complaintsController)
   )
 );
 
 //The get complaints  by id request which binds the middleware for token/role verification and compalints controller
 router.get(
   "/complaint/:id",
-  Tokenization.authToken(roles.client_engagement_officer),
+  Tokenization.authToken([
+    roles.client,
+    roles.client_engagement_officer,
+    roles.food_processing_officer,
+    roles.food_taster,
+  ]),
   httpRequestCallBack(
     complaintsController.getComplaintById.bind(complaintsController)
   )

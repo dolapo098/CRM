@@ -19,8 +19,9 @@ UserService.prototype.authenticate = async function (params) {
   this._fieldValidator.validateRequiredFields(reqFields, params);
   //find a user by firstName  from the data source
   const user = await this._userRepository.findUser(params);
+
   if (user === null) {
-    const message = "user does not exist ";
+    const message = "login failed ";
     throw new MissingResourceError(message);
   }
 
@@ -32,6 +33,8 @@ UserService.prototype.authenticate = async function (params) {
   if (user !== null && tokenResult !== null) {
     authResult.message = "Login Successful";
     authResult.tokenResult = tokenResult;
+    authResult.role = user.dataValues.role;
+    authResult.user = user.dataValues.firstName;
     return authResult;
   }
 };
@@ -62,6 +65,7 @@ UserService.prototype.getAllUsers = async function (params) {
 
   //method to get all users with pagination properties from a data source
   const result = await this._userRepository.findAllUsersByPagination(
+    params.filterText,
     offset,
     limit
   );
