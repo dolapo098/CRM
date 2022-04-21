@@ -78,6 +78,7 @@ ComplaintService.prototype.makeComplaints = async function (params) {
 
 //The method to review all type of request
 ComplaintService.prototype.reviewRequest = async function (params) {
+  console.log("paz", params);
   let reqFields = ["state", "reviewedBy", "id"];
   this._fieldValidator.validateRequiredFields(reqFields, params);
 
@@ -96,14 +97,10 @@ ComplaintService.prototype.reviewRequest = async function (params) {
     throw new MissingResourceError(message);
   }
 
-  console.log(complaint.dataValues);
-
   if (complaint.dataValues.state === "complete") {
     throw new ValidationError("Work flow cycle is completed");
-  } else if (
-    complaint.dataValues.state !== "complete" &&
-    complaint.dataValues.state === params.state
-  ) {
+  }
+  if (complaint.dataValues.state === params.state) {
     throw new ValidationError(" request is presently awaiting a review");
   }
 
@@ -113,9 +110,11 @@ ComplaintService.prototype.reviewRequest = async function (params) {
     ...complaint.dataValues,
     ...params,
   });
-
+  // console.log(newParams);
+  // return newParams;
   //https://sequelize.org/docs/v6/core-concepts/model-instances/  to update the records in the database
-  let result = await complaint.update(newParams);
+  complaint.set(newParams);
+  let result = await complaint.save();
   return result.dataValues;
 };
 

@@ -117,7 +117,7 @@ export function LeftSideBar() {
                       {" "}
                       <span className='d-none d-sm-inline text-dark'>
                         <i
-                          class='fa fa-user marginRight'
+                          className='fa fa-user marginRight'
                           aria-hidden='true'
                         ></i>
                         Users
@@ -128,7 +128,7 @@ export function LeftSideBar() {
                     <a href='/' className='nav-link px-0'>
                       {" "}
                       <span className='d-none d-sm-inline text-dark'>
-                        <i class='fa-solid fa-receipt marginRight'></i>
+                        <i className='fa-solid fa-receipt marginRight'></i>
                         Sales Invoice Logs
                       </span>{" "}
                     </a>

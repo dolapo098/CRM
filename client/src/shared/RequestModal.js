@@ -8,10 +8,12 @@ import { complaintsService } from "../_services";
 export function RequestModal(props) {
   let [attachmentId, setUploadedFileId] = useState("");
   let [isSuccess, setIsSuccess] = useState(false);
+  let [isError, setIsError] = useState(false);
 
   const handleClose = () => {
     props.close(false);
     setIsSuccess(false);
+    setIsError(false);
   };
 
   //validate the form fields via formik library
@@ -37,10 +39,12 @@ export function RequestModal(props) {
       .then(
         (data) => {
           setIsSuccess(true);
+          setStatus("Successful");
           setSubmitting(false);
         },
         (error) => {
           setIsSuccess(false);
+          setIsError(true);
           setSubmitting(false);
           setStatus(error);
         }
@@ -96,12 +100,10 @@ export function RequestModal(props) {
                       />
                     )}
                   </div>
-                  {status && (
+                  {isError && (
                     <div className={"alert alert-danger"}>{status}</div>
                   )}
-                  {isSuccess && (
-                    <small className='text-success '>successful</small>
-                  )}
+                  {isSuccess && <div className='text-success '>{status}</div>}
                 </Form>
               )}
             </Formik>{" "}

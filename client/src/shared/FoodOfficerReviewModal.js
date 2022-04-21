@@ -10,7 +10,7 @@ import { appStateData } from "../_helper";
 export function FoodOfficerReviewModal(props) {
   const { setFormData, formData } = GetComplaintDetails();
   let [isSuccess, setIsSuccess] = useState(false);
-
+  let [isError, setIsError] = useState(false);
   let { id, state, status } = formData;
 
   useEffect(() => {
@@ -35,6 +35,8 @@ export function FoodOfficerReviewModal(props) {
 
   const handleClose = () => {
     props.close(false);
+    setIsError(false);
+    setIsSuccess(false);
   };
 
   //download attachment if a file was uploaded
@@ -91,10 +93,12 @@ export function FoodOfficerReviewModal(props) {
       .then(
         (res) => {
           setIsSuccess(true);
+          setStatus("Successful");
           setSubmitting(false);
         },
         (err) => {
           console.log(err);
+          setIsError(true);
           setStatus(err);
           setSubmitting(false);
         }
@@ -164,13 +168,11 @@ export function FoodOfficerReviewModal(props) {
                     )}
                   </div>
 
-                  {status && (
+                  {isError && (
                     <div className={"alert alert-danger"}>{status}</div>
                   )}
                   {isSuccess && (
-                    <small className='text-success position-absolute '>
-                      successful
-                    </small>
+                    <div className='alert alert-success '>{status}</div>
                   )}
                 </Form>
               )}

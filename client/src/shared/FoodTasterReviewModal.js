@@ -10,6 +10,7 @@ import { appStateData } from "../_helper";
 export function FoodTasterReviewModal(props) {
   const { setFormData, formData } = GetComplaintDetails();
   let [isSuccess, setIsSuccess] = useState(false);
+  let [isError, setIsError] = useState(false);
 
   let { id, state, status } = formData;
 
@@ -35,6 +36,8 @@ export function FoodTasterReviewModal(props) {
 
   const handleClose = () => {
     props.close(false);
+    setIsError(false);
+    setIsSuccess(false);
   };
 
   //download attachment if a file was uploaded
@@ -89,12 +92,13 @@ export function FoodTasterReviewModal(props) {
     complaintsService.foodTasterreview({ id, food_taster_comment, state }).then(
       (res) => {
         setIsSuccess(true);
+        setStatus("Successful");
         setSubmitting(false);
       },
       (err) => {
         setSubmitting(false);
+        setIsError(true);
         setStatus(err);
-        console.log(err);
       }
     );
   };
@@ -162,13 +166,11 @@ export function FoodTasterReviewModal(props) {
                     )}
                   </div>
 
-                  {status && (
+                  {isError && (
                     <div className={"alert alert-danger"}>{status}</div>
                   )}
                   {isSuccess && (
-                    <small className='text-success position-absolute '>
-                      successful
-                    </small>
+                    <div className='alert alert-success'>{status}</div>
                   )}
                 </Form>
               )}

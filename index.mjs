@@ -9,7 +9,7 @@ app.use(express.json()); // A middlware from express js  used for parsing incomi
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
 app.use("/crm/api", router);
-const port = process.env.NODE_ENV === "production" ? 80 : 5000;
+const port = process.env.NODE_ENV === "production" ? 80 : 4000;
 
 //an express method used for listeing to any specific connection
 app.listen(port, () => {

@@ -51,7 +51,11 @@ class FoodProcessingOfficer {
   }
 }
 FoodProcessingOfficer.prototype.approve = function (params) {
-  if (params.state === state.approvedByFoodProcessingOfficer) {
+  if (
+    params.state === state.approvedByFoodProcessingOfficer &&
+    params.status === status.awaitngFoodProcessingOfficer
+  ) {
+    console.log("zzzzzzzzzzzzzzzzzzzzzzzzzzzzz");
     params.status = status.awaitingFoodTaster;
     return params;
   }

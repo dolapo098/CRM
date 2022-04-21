@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "axios"; //https://www.npmjs.com/package/axios   axios is a promised based http client for node
 import { authHeader, HandleError, fileHeader } from "../_helper";
 
 const apiUrl = process.env.REACT_APP_BASEURL_DEMO;
@@ -17,6 +17,7 @@ export const complaintsService = {
   clientOfficerGetComplaints,
 };
 
+// api request to upload file
 async function fileUpload(selectedFile) {
   const formData = new FormData();
   formData.append("file", selectedFile, selectedFile.name);
