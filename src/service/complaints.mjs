@@ -78,7 +78,6 @@ ComplaintService.prototype.makeComplaints = async function (params) {
 
 //The method to review all type of request
 ComplaintService.prototype.reviewRequest = async function (params) {
-  console.log("paz", params);
   let reqFields = ["state", "reviewedBy", "id"];
   this._fieldValidator.validateRequiredFields(reqFields, params);
 
@@ -104,18 +103,22 @@ ComplaintService.prototype.reviewRequest = async function (params) {
     throw new ValidationError(" request is presently awaiting a review");
   }
 
+  const { id, ...updateProps } = params;
   //the method to change the behaviour of the request based on several states of the approval types
   //refer to the complaints workflow class in the index.mjs file
+  console.log(complaint.dataValues.status);
   const newParams = this._workFlowContext.manageRequest({
-    ...complaint.dataValues,
-    ...params,
+    status: complaint.dataValues.status,
+    ...updateProps,
   });
-  // console.log(newParams);
-  // return newParams;
+
   //https://sequelize.org/docs/v6/core-concepts/model-instances/  to update the records in the database
-  complaint.set(newParams);
-  let result = await complaint.save();
-  return result.dataValues;
+  const result = await this._complaintsRepository.updateComplaints(
+    newParams,
+    id
+  );
+
+  return result;
 };
 
 ComplaintService.prototype.getComplaintById = async function (params) {

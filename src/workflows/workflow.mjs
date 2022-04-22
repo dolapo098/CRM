@@ -1,4 +1,6 @@
-import { status, state, roles } from "../_helper/index.mjs";
+import { status, state } from "../_helper/index.mjs";
+
+//Design to alter the behaviour of the workflow contexts  based on status and state keys
 export class ComplaintsWorkFlow {
   constructor() {
     this.currentState = new ClientEngagementOfficer(this);
@@ -10,20 +12,20 @@ export class ComplaintsWorkFlow {
   }
 
   manageRequest(params) {
-    let newParams;
-
     this.currentState.approve(params);
     this.currentState.reject(params);
     return params;
   }
 }
 
+//Client Enagagement state
 class ClientEngagementOfficer {
   constructor(complaintsRequest) {
     this._complaintsRequest = complaintsRequest;
   }
 }
 
+//approve behavioural pattern
 ClientEngagementOfficer.prototype.approve = function (params) {
   if (
     params.state === state.approvedByClientEngagementOfficer &&
@@ -38,6 +40,7 @@ ClientEngagementOfficer.prototype.approve = function (params) {
   );
 };
 
+//reject behavioural pattern
 ClientEngagementOfficer.prototype.reject = function (params) {
   this._complaintsRequest.change(
     new FoodProcessingOfficer(this._complaintsRequest),
@@ -45,17 +48,19 @@ ClientEngagementOfficer.prototype.reject = function (params) {
   );
 };
 
+//Food processing officer  state
 class FoodProcessingOfficer {
   constructor(complaintsRequest) {
     this._complaintsRequest = complaintsRequest;
   }
 }
+
+//approve behavioural pattern
 FoodProcessingOfficer.prototype.approve = function (params) {
   if (
     params.state === state.approvedByFoodProcessingOfficer &&
     params.status === status.awaitngFoodProcessingOfficer
   ) {
-    console.log("zzzzzzzzzzzzzzzzzzzzzzzzzzzzz");
     params.status = status.awaitingFoodTaster;
     return params;
   }
@@ -65,6 +70,7 @@ FoodProcessingOfficer.prototype.approve = function (params) {
   );
 };
 
+//reject behavioural pattern
 FoodProcessingOfficer.prototype.reject = function (params) {
   if (
     params.state === state.rejectedByFoodProcessingOfficer &&
@@ -79,12 +85,14 @@ FoodProcessingOfficer.prototype.reject = function (params) {
   );
 };
 
+//Food taster state
 class FoodTaster {
   constructor(complaintsRequest) {
     this._complaintsRequest = complaintsRequest;
   }
 }
 
+//approve behavioural pattern
 FoodTaster.prototype.approve = function (params) {
   if (
     params.state === state.complete &&
@@ -98,6 +106,7 @@ FoodTaster.prototype.approve = function (params) {
   return params;
 };
 
+//reject behavioural pattern
 FoodTaster.prototype.reject = function (params) {
   if (
     params.state === state.rejectedByFoodTaster &&
