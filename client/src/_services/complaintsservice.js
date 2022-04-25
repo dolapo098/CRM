@@ -13,6 +13,7 @@ export const complaintsService = {
   foodProcessingOfficerreview,
   foodTasterreview,
   foodOfficerGetComplaints,
+  getAllCompleteRequest,
   foodTasterGetComplaints,
   clientOfficerGetComplaints,
 };
@@ -75,6 +76,22 @@ async function clientOfficerGetComplaints(params) {
     method: "get",
     headers: authHeader(),
     url: `${apiUrl}/crm/api/clientofficer/complaints?page=${params.page}&pageSize=${params.pageSize}`,
+  };
+  try {
+    let response = await axios(requestOptions);
+    response = response.data;
+    return response;
+  } catch (error) {
+    throw HandleError(error);
+  }
+}
+
+//The api request to get all complaints for the client officer
+async function getAllCompleteRequest(params) {
+  const requestOptions = {
+    method: "get",
+    headers: authHeader(),
+    url: `${apiUrl}/crm/api/complete/complaints?page=${params.page}&pageSize=${params.pageSize}`,
   };
   try {
     let response = await axios(requestOptions);

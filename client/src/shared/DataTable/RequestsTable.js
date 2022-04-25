@@ -7,6 +7,10 @@ import {
   ClientOfficerModal,
   FoodOfficerModal,
   FoodTasterModal,
+  ClientOfficerStatusData,
+  CompleteStatusData,
+  FoodOfficerStatusData,
+  FoodTasterStatusData,
 } from "../../shared";
 
 export function RequestsTable(props) {
@@ -15,6 +19,7 @@ export function RequestsTable(props) {
   const [isFoodOfficerModal, setFoodOfficerModal] = useState(false);
   const [isFoodTasterModal, setFoodTasterModal] = useState(false);
   const [complaintsId, setComplaintsId] = useState(null);
+  const [status, setStatus] = useState("");
 
   // checck the type of modal page for reviews
   const viewMore = (id, state) => {
@@ -27,10 +32,19 @@ export function RequestsTable(props) {
       new FoodTasterModal(state, setFoodTasterModal),
     ];
 
+    let switchStatus = [
+      new CompleteStatusData(state, setStatus),
+      new ClientOfficerStatusData(state, setStatus),
+      new FoodOfficerStatusData(state, setStatus),
+      new FoodTasterStatusData(state, setStatus),
+    ];
+
     // call the SwichModal classes and set the type of modal page
     switchModal.forEach((val) => {
       val.showReviewModal();
     });
+
+    switchStatus.forEach((val) => val.showTableData());
   };
 
   return (

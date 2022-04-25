@@ -58,6 +58,33 @@ ComplaintsController.prototype.getAllComplaints = async function (httpRequest) {
   }
 };
 
+ComplaintsController.prototype.complaintsByInitiator = async function (
+  httpRequest
+) {
+  try {
+    const data = await this.service.complaintsByInitiator({
+      initiator: httpRequest.loggedinuser.id,
+      ...httpRequest.query,
+    });
+    const response = this.resType.responseIsJson(data);
+    return response;
+  } catch (err) {
+    throw errorHandler(err, this.logger);
+  }
+};
+
+ComplaintsController.prototype.getAllCompleteRequest = async function (
+  httpRequest
+) {
+  try {
+    const data = await this.service.getAllCompleteRequest(httpRequest.query);
+    const response = this.resType.responseIsJson(data);
+    return response;
+  } catch (err) {
+    throw errorHandler(err, this.logger);
+  }
+};
+
 ComplaintsController.prototype.clientOfficerViewComplaints = async function (
   httpRequest
 ) {

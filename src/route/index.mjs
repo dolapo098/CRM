@@ -80,7 +80,7 @@ router.post(
   )
 );
 
-//The  post complaints reviw request for food taster which binds the middleware for token/role verification and compalints controller
+//The  post complaints review by id request for food taster which binds the middleware for token/role verification and compalints controller
 router.post(
   "/complaints/review/foodtaster/:id",
   Tokenization.authToken(roles.food_taster),
@@ -94,7 +94,7 @@ router.get(
   "/complaints",
   Tokenization.authToken(roles.client),
   httpRequestCallBack(
-    complaintsController.getAllComplaints.bind(complaintsController)
+    complaintsController.complaintsByInitiator.bind(complaintsController)
   )
 );
 
@@ -119,6 +119,14 @@ router.get(
   Tokenization.authToken(roles.food_taster),
   httpRequestCallBack(
     complaintsController.foodTasterViewComplaints.bind(complaintsController)
+  )
+);
+
+router.get(
+  "/complete/complaints",
+  Tokenization.authToken(roles.food_taster),
+  httpRequestCallBack(
+    complaintsController.getAllCompleteRequest.bind(complaintsController)
   )
 );
 

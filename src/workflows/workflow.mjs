@@ -1,4 +1,4 @@
-import { status, state } from "../_helper/index.mjs";
+import { last_action, state } from "../_helper/index.mjs";
 
 //Design to alter the behaviour of the workflow contexts  based on status and state keys
 export class ComplaintsWorkFlow {
@@ -28,10 +28,12 @@ class ClientEngagementOfficer {
 //approve behavioural pattern
 ClientEngagementOfficer.prototype.approve = function (params) {
   if (
-    params.state === state.approvedByClientEngagementOfficer &&
-    params.status === status.awaitingClientEngagementOfficer
+    (params.state === state.awaitngFoodProcessingOfficer &&
+      params.last_action === last_action.complaints_initiated) ||
+    (params.state === state.awaitngFoodProcessingOfficer &&
+      params.last_action === last_action.rejectedByFoodProcessingOfficer)
   ) {
-    params.status = status.awaitngFoodProcessingOfficer;
+    params.last_action = last_action.approvedByClientEngagementOfficer;
     return params;
   }
   this._complaintsRequest.change(
@@ -58,10 +60,12 @@ class FoodProcessingOfficer {
 //approve behavioural pattern
 FoodProcessingOfficer.prototype.approve = function (params) {
   if (
-    params.state === state.approvedByFoodProcessingOfficer &&
-    params.status === status.awaitngFoodProcessingOfficer
+    (params.state === state.awaitingFoodTaster &&
+      params.last_action === last_action.approvedByClientEngagementOfficer) ||
+    (params.state === state.awaitingFoodTaster &&
+      params.last_action === last_action.rejectedByFoodTaster)
   ) {
-    params.status = status.awaitingFoodTaster;
+    params.last_action = last_action.approvedByFoodProcessingOfficer;
     return params;
   }
   this._complaintsRequest.change(
@@ -73,10 +77,12 @@ FoodProcessingOfficer.prototype.approve = function (params) {
 //reject behavioural pattern
 FoodProcessingOfficer.prototype.reject = function (params) {
   if (
-    params.state === state.rejectedByFoodProcessingOfficer &&
-    params.status === status.awaitngFoodProcessingOfficer
+    (params.state === state.awaitingClientEngagementOfficer &&
+      params.last_action === last_action.approvedByClientEngagementOfficer) ||
+    (params.state === state.awaitingFoodTaster &&
+      params.last_action === last_action.rejectedByFoodTaster)
   ) {
-    params.status = status.awaitingClientEngagementOfficer;
+    params.last_action = last_action.rejectedByFoodProcessingOfficer;
     return params;
   }
   this._complaintsRequest.change(
@@ -96,10 +102,9 @@ class FoodTaster {
 FoodTaster.prototype.approve = function (params) {
   if (
     params.state === state.complete &&
-    params.status === status.awaitingFoodTaster
+    params.last_action === last_action.approvedByFoodProcessingOfficer
   ) {
-    console.log(" i entred food  taster");
-    params.status = status.complete;
+    params.last_action = last_action.approvedByFoodTaster;
     params.closedBy = params.reviewedBy;
     params.dateClosed = new Date().toISOString();
   }
@@ -109,10 +114,10 @@ FoodTaster.prototype.approve = function (params) {
 //reject behavioural pattern
 FoodTaster.prototype.reject = function (params) {
   if (
-    params.state === state.rejectedByFoodTaster &&
-    params.status === status.awaitingFoodTaster
+    params.state === state.awaitngFoodProcessingOfficer &&
+    params.last_action === last_action.approvedByFoodProcessingOfficer
   ) {
-    params.status = status.awaitngFoodProcessingOfficer;
+    params.last_action = last_action.rejectedByFoodTaster;
   }
   return params;
 };

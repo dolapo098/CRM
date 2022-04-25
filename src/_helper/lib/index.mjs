@@ -59,49 +59,16 @@ export class Pagination {
   }
 }
 
-export class MapDataFromRows {
-  static filterForClientOfficer(rows = []) {
-    let data = [];
-    if (rows.length > 0) {
-      rows.forEach((val) => {
-        if (
-          val.dataValues.status === status.awaitingClientEngagementOfficer ||
-          val.dataValues.status === status.complete
-        )
-          data.push(val.dataValues);
-      });
-      return data;
-    }
+//Used to Generate a random unique id of length 5
+export function generateUniqueId(length) {
+  var result = "";
+  var characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  var charactersLength = characters.length;
+  for (var i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
   }
-
-  static filterForFoodProcessingOfficer(rows = []) {
-    let data = [];
-    if (rows.length > 0) {
-      rows.forEach((val) => {
-        if (
-          val.dataValues.status === status.awaitngFoodProcessingOfficer ||
-          val.dataValues.status === status.complete
-        )
-          data.push(val.dataValues);
-      });
-      return data;
-    }
-  }
-
-  static filterForFoodTaster(rows = []) {
-    let data = [];
-    if (rows.length > 0) {
-      rows.forEach((val) => {
-        if (
-          val.dataValues.status === status.awaitingFoodTaster ||
-          val.dataValues.status === status.complete
-        )
-          data.push(val.dataValues);
-      });
-
-      return data;
-    }
-  }
+  return result;
 }
 
 //The module for Password hasing and verification

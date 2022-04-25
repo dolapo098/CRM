@@ -12,7 +12,7 @@ export function ReviewModal(props) {
   let [isSuccess, setIsSuccess] = useState(false);
   let [isError, setIsError] = useState(false);
 
-  let { id, state, status } = formData;
+  let { id, state, last_action } = formData;
 
   useEffect(() => {
     if (props.complaintsId) {
@@ -26,7 +26,7 @@ export function ReviewModal(props) {
             salesInvoiceId: res?.data?.salesInvoiceId,
             reviewedBy: res?.data?.reviewedBy,
             state: res?.data?.state,
-            status: res?.data?.status,
+            last_action: res?.data?.last_action,
           });
         },
         (err) => console.log(err)
@@ -79,20 +79,10 @@ export function ReviewModal(props) {
   };
 
   function approve() {
-    if (status === appStateData.status.awaitingClientEngagementOfficer) {
+    if (last_action === appStateData.last_action.complaints_initiated) {
       setFormData({
         ...formData,
-        state: appStateData.state.approvedByClientEngagementOfficer,
-      });
-    } else if (status === appStateData.status.awaitngFoodProcessingOfficer) {
-      setFormData({
-        ...formData,
-        state: appStateData.state.approvedByFoodProcessingOfficer,
-      });
-    } else if (status === appStateData.status.awaitingFoodTaster) {
-      setFormData({
-        ...formData,
-        state: appStateData.state.complete,
+        state: appStateData.state.awaitngFoodProcessingOfficer,
       });
     }
   }

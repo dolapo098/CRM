@@ -5,13 +5,13 @@ module.exports = {
     // logic for creating a SalesInvoice model and its properties
     await queryInterface.createTable("SalesInvoices", {
       id: {
-        allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
+        allowNull: false,
+        unique: true,
       },
       productId: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
         allowNull: false,
         references: {
           model: "Products",
@@ -21,7 +21,7 @@ module.exports = {
         onDelete: "CASCADE",
       },
       clientId: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
         allowNull: false,
         references: {
           model: "Users",
@@ -35,11 +35,11 @@ module.exports = {
         allowNull: false,
       },
       createdAt: {
-        allowNull: false,
+        allowNull: true,
         type: Sequelize.DATE,
       },
       updatedAt: {
-        allowNull: false,
+        allowNull: true,
         type: Sequelize.DATE,
       },
     });

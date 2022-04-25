@@ -5,13 +5,12 @@ module.exports = {
     // logic for creating a Complaints work flow model and its properties
     await queryInterface.createTable("Complaints_Workflows", {
       id: {
-        allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
+        allowNull: false,
       },
       initiator: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
         allowNull: false,
         references: {
           model: "Users",
@@ -21,7 +20,7 @@ module.exports = {
         onDelete: "CASCADE",
       },
       salesInvoiceId: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
         allowNull: false,
         references: {
           model: "SalesInvoices",
@@ -34,12 +33,33 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: true,
       },
+      client_officer_comment: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
+      food_processing_officer_comment: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
+      food_taster_comment: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
       attachmentId: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
+      last_action: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      reviewedBy: {
-        type: Sequelize.INTEGER,
+      state: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      last_reviewed_by: {
+        type: Sequelize.STRING,
+        allowNull: true,
         references: {
           model: "Users",
           key: "id",
@@ -48,7 +68,8 @@ module.exports = {
         onDelete: "CASCADE",
       },
       closedBy: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
+        allowNull: true,
         references: {
           model: "Users",
           key: "id",
@@ -56,20 +77,16 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
       },
-      openedAt: {
-        allowNull: false,
-        type: Sequelize.DATE,
-      },
       closedAt: {
-        allowNull: false,
+        allowNull: true,
         type: Sequelize.DATE,
       },
       createdAt: {
-        allowNull: false,
+        allowNull: true,
         type: Sequelize.DATE,
       },
       updatedAt: {
-        allowNull: false,
+        allowNull: true,
         type: Sequelize.DATE,
       },
     });

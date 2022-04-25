@@ -5,6 +5,7 @@ import {
   ClientEngagementOfficer,
   FoodProcessingOfficer,
   FoodTaster,
+  CompletedRequests,
 } from "../ManageRequest";
 import { Home } from "../HomePage";
 import { roles } from "../../_helper";
@@ -32,6 +33,16 @@ export function CustomRoute() {
         path='/clientengagementofficer'
         roles={[roles.client_engagement_officer]}
         component={ClientEngagementOfficer}
+      ></PrivateRoute>
+      <PrivateRoute
+        path='/completedrequests'
+        roles={[
+          roles.client_engagement_officer,
+          roles.client,
+          roles.food_taster,
+          roles.food_processing_officer,
+        ]}
+        component={CompletedRequests}
       ></PrivateRoute>
       <PrivateRoute
         path='/foodprocessingofficer'

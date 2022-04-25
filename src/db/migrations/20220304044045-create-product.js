@@ -5,10 +5,10 @@ module.exports = {
     // logic for creating a Products model and its properties
     await queryInterface.createTable("Products", {
       id: {
-        allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
+        allowNull: false,
+        unique: true,
       },
       name: {
         type: Sequelize.STRING,
@@ -23,7 +23,7 @@ module.exports = {
         allowNull: false,
       },
       createdAt: {
-        allowNull: false,
+        allowNull: true,
         type: Sequelize.DATE,
       },
       updatedAt: {

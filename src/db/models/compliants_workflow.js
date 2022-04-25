@@ -16,6 +16,7 @@ module.exports = (sequelize, DataTypes) => {
   }
   Complaints_Workflow.init(
     {
+      id: DataTypes.STRING,
       initiator: DataTypes.STRING,
       closedBy: DataTypes.STRING,
       attachmentId: DataTypes.STRING,
@@ -23,12 +24,12 @@ module.exports = (sequelize, DataTypes) => {
       client_officer_comment: DataTypes.STRING,
       food_officer_comment: DataTypes.STRING,
       food_taster_comment: DataTypes.STRING,
-      salesInvoiceId: DataTypes.INTEGER,
-      dateClosed: DataTypes.INTEGER,
+      salesInvoiceId: DataTypes.STRING,
+      dateClosed: DataTypes.DATE,
       state: DataTypes.STRING,
-      status: DataTypes.INTEGER,
-      reviewedBy: DataTypes.INTEGER,
-      closedBy: DataTypes.INTEGER,
+      last_action: DataTypes.STRING,
+      reviewedBy: DataTypes.STRING,
+      closedBy: DataTypes.STRING,
     },
     {
       sequelize,

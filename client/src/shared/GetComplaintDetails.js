@@ -9,7 +9,7 @@ function GetComplaintDetails() {
     salesInvoiceId: "" || "",
     reviewedBy: "" || "",
     state: "" || "",
-    status: "" || "",
+    last_action: "" || "",
   });
 
   const [isSubmmitted, setIsSubmited] = useState(false);

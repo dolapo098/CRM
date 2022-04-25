@@ -1,58 +1,58 @@
 import { appStateData } from "../_helper";
 
 //classes used to render a specific modal based on the status of the work flow
-export class ClientModal {
+export class CompleteStatusData {
   constructor(val, func) {
     this.val = val;
     this.func = func;
   }
 
-  //show modal for approval and reject
-  showReviewModal() {
+  //To view request status for client
+  showTableData() {
     if (this.val === appStateData.state.complete) {
-      this.func(true);
+      this.func("Our dispatch will deliver the food shortly");
     }
   }
 }
 
-export class ClientOfficerModal {
+export class ClientOfficerStatusData {
   constructor(val, func) {
     this.val = val;
     this.func = func;
   }
 
-  //show modal for approval and reject
-  showReviewModal() {
+  //To view request status fot client
+  showTableData() {
     if (this.val === appStateData.state.awaitingClientEngagementOfficer) {
-      this.func(true);
+      this.func("Request has been confirmed");
     }
   }
 }
 
-export class FoodOfficerModal {
+export class FoodOfficerStatusData {
   constructor(val, func) {
     this.val = val;
     this.func = func;
   }
 
-  //show modal for approval and reject
-  showReviewModal() {
+  //To view request status for client
+  showTableData() {
     if (this.val === appStateData.state.awaitngFoodProcessingOfficer) {
-      this.func(true);
+      this.func("The food packaging is presently receiving attention");
     }
   }
 }
 
-export class FoodTasterModal {
+export class FoodTasterStatusData {
   constructor(val, func) {
     this.val = val;
     this.func = func;
   }
 
-  //show modal for approval and reject
-  showReviewModal() {
+  //To view request status for client
+  showTableData() {
     if (this.val === appStateData.state.awaitingFoodTaster) {
-      this.func(true);
+      this.func("The food packaging is presently receiving attention");
     }
   }
 }

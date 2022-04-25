@@ -113,14 +113,14 @@ export function LeftSideBar() {
                     </li>
                   )}
                   <li className='w-100 mb-1'>
-                    <a href='/' className='nav-link px-0'>
+                    <a href='/completedrequests' className='nav-link px-0'>
                       {" "}
                       <span className='d-none d-sm-inline text-dark'>
                         <i
                           className='fa fa-user marginRight'
                           aria-hidden='true'
                         ></i>
-                        Users
+                        CompletedRequets
                       </span>{" "}
                     </a>
                   </li>

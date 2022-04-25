@@ -11,7 +11,7 @@ export function FoodOfficerReviewModal(props) {
   const { setFormData, formData } = GetComplaintDetails();
   let [isSuccess, setIsSuccess] = useState(false);
   let [isError, setIsError] = useState(false);
-  let { id, state, status } = formData;
+  let { id, state, last_action } = formData;
 
   useEffect(() => {
     if (props.complaintsId) {
@@ -25,7 +25,7 @@ export function FoodOfficerReviewModal(props) {
             salesInvoiceId: res?.data?.salesInvoiceId,
             reviewedBy: res?.data?.reviewedBy,
             state: res?.data?.state,
-            status: res?.data?.status,
+            last_action: res?.data?.last_action,
           });
         },
         (err) => console.log(err)
@@ -51,30 +51,24 @@ export function FoodOfficerReviewModal(props) {
 
   //set the approval state workflow beform form is submitted
   const approve = () => {
-    if (status === appStateData.status.awaitingClientEngagementOfficer) {
+    if (
+      last_action === appStateData.last_action.approvedByClientEngagementOfficer
+    ) {
       setFormData({
         ...formData,
-        state: appStateData.state.approvedByClientEngagementOfficer,
-      });
-    } else if (status === appStateData.status.awaitngFoodProcessingOfficer) {
-      setFormData({
-        ...formData,
-        state: appStateData.state.approvedByFoodProcessingOfficer,
-      });
-    } else if (status === appStateData.status.awaitingFoodTaster) {
-      setFormData({
-        ...formData,
-        state: appStateData.state.complete,
+        state: appStateData.state.awaitingFoodTaster,
       });
     }
   };
 
   //set the  state the rejected state workflow beform form is submitted
   const reject = () => {
-    if (status === appStateData.status.awaitngFoodProcessingOfficer) {
+    if (
+      last_action === appStateData.last_action.approvedByClientEngagementOfficer
+    ) {
       setFormData({
         ...formData,
-        state: appStateData.state.rejectedByFoodProcessingOfficer,
+        state: appStateData.state.awaitingClientEngagementOfficer,
       });
     }
   };
