@@ -62,6 +62,7 @@ export function ReviewModal(props) {
     { client_officer_comment },
     { setStatus, setSubmitting }
   ) => {
+    console.log("yanaga");
     setStatus();
     setIsSuccess(false);
     complaintsService.reviewRequest({ id, client_officer_comment, state }).then(
@@ -79,7 +80,10 @@ export function ReviewModal(props) {
   };
 
   function approve() {
-    if (last_action === appStateData.last_action.complaints_initiated) {
+    if (
+      last_action === appStateData.last_action.complaints_initiated ||
+      last_action === appStateData.last_action.rejectedByFoodProcessingOfficer
+    ) {
       setFormData({
         ...formData,
         state: appStateData.state.awaitngFoodProcessingOfficer,

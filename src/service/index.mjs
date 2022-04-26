@@ -10,12 +10,7 @@ import {
   complaintsRepository,
   salesRepository,
 } from "../data-access/index.mjs";
-import {
-  Tokenization,
-  FieldValidator,
-  Pagination,
-  MapDataFromRows,
-} from "../_helper/index.mjs";
+import { Tokenization, FieldValidator, Pagination } from "../_helper/index.mjs";
 
 //The Tokenization , FieldValidator and Pagination are modules injected intothe service class
 const userService = new UserService(
@@ -31,8 +26,7 @@ const complaintsService = new ComplaintService(
   salesRepository,
   complaintsRepository,
   Pagination,
-  new ComplaintsWorkFlow(),
-  MapDataFromRows
+  new ComplaintsWorkFlow()
 );
 
 const fileUploadService = new FileUploadService(FieldValidator, fs, path, mime);

@@ -1,50 +1,39 @@
 import React, { useState } from "react";
+import { useLocation } from "react-router-dom";
 import {
   ReviewModal,
   FoodOfficerReviewModal,
   FoodTasterReviewModal,
-  ClientModal,
+  // ClientModal,
   ClientOfficerModal,
   FoodOfficerModal,
   FoodTasterModal,
-  ClientOfficerStatusData,
-  CompleteStatusData,
-  FoodOfficerStatusData,
-  FoodTasterStatusData,
 } from "../../shared";
 
 export function RequestsTable(props) {
+  let location = useLocation();
+  const clientUrl = "/initiator";
   const [requestModal, setRequestModal] = useState(false);
-  const [clientModal, setClientModal] = useState(false);
+  // const [clientModal, setClientModal] = useState(false);
   const [isFoodOfficerModal, setFoodOfficerModal] = useState(false);
   const [isFoodTasterModal, setFoodTasterModal] = useState(false);
   const [complaintsId, setComplaintsId] = useState(null);
-  const [status, setStatus] = useState("");
 
   // checck the type of modal page for reviews
   const viewMore = (id, state) => {
     setComplaintsId(id);
 
     let switchModal = [
-      new ClientModal(state, setClientModal),
+      // new ClientModal(state, setClientModal),
       new ClientOfficerModal(state, setRequestModal),
       new FoodOfficerModal(state, setFoodOfficerModal),
       new FoodTasterModal(state, setFoodTasterModal),
-    ];
-
-    let switchStatus = [
-      new CompleteStatusData(state, setStatus),
-      new ClientOfficerStatusData(state, setStatus),
-      new FoodOfficerStatusData(state, setStatus),
-      new FoodTasterStatusData(state, setStatus),
     ];
 
     // call the SwichModal classes and set the type of modal page
     switchModal.forEach((val) => {
       val.showReviewModal();
     });
-
-    switchStatus.forEach((val) => val.showTableData());
   };
 
   return (
@@ -80,9 +69,15 @@ export function RequestsTable(props) {
               <th scope='col'>Sales Invoice No</th>
               <th scope='col'>Comment</th>
               <th scope='col'>Initiator</th>
-              <th scope='col'>Reviewer</th>
+              {location.pathname !== clientUrl && (
+                <th scope='col'>Last Action</th>
+              )}
+              {location.pathname !== clientUrl && (
+                <th scope='col'>Last Reviewed By</th>
+              )}
+
               <th scope='col'>State</th>
-              <th></th>
+              {location.pathname !== clientUrl && <th></th>}
             </tr>
           </thead>
 
@@ -94,14 +89,23 @@ export function RequestsTable(props) {
                   <td>{val.salesInvoiceId}</td>
                   <td>{val.comment}</td>
                   <td>{val.initiator}</td>
-                  <td>{val.reviewedBy}</td>
+                  {location.pathname !== clientUrl && (
+                    <td>{val.last_action}</td>
+                  )}
+                  {location.pathname !== clientUrl && (
+                    <td>{val.last_reviewed_by}</td>
+                  )}
+
                   <td>{val.state}</td>
-                  <td>
-                    {" "}
-                    <div onClick={() => viewMore(val.id, val.status)}>
-                      <i className='fa fa-eye ' aria-hidden='true'></i>
-                    </div>
-                  </td>
+
+                  {location.pathname !== clientUrl && (
+                    <td>
+                      {" "}
+                      <div onClick={() => viewMore(val.id, val.state)}>
+                        <i className='fa fa-eye ' aria-hidden='true'></i>
+                      </div>
+                    </td>
+                  )}
                 </tr>
               </tbody>
             </React.Fragment>

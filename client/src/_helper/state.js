@@ -16,14 +16,14 @@
 
 export const state = {
   awaitingClientEngagementOfficer: "awaiting_client_engagement_officer",
-  awaitngFoodProcessingOfficer: " awaiting_clientEngagement_officer",
+  awaitngFoodProcessingOfficer: " awaiting_food_processing_officer",
   awaitingFoodTaster: "awaiting_food_taster",
-  complete: 4,
+  complete: "complete",
 };
 
 export const last_action = {
   complaints_initiated: "complaints_initiated",
-  approvedByClientEngagementOfficer: "approved_clientengagement_officer",
+  approvedByClientEngagementOfficer: "approved_client_engagement_officer",
   approvedByFoodProcessingOfficer: "approved_food_processing_officer",
   rejectedByFoodProcessingOfficer: "rejected_food_processing_officer",
   approvedByFoodTaster: "approved_food_taster",

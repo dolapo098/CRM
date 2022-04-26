@@ -11,6 +11,8 @@ SalesInvoiceRepository.prototype.findInvoiceById = async function (id) {
     where: {
       [Op.or]: [{ id: id }],
     },
+    raw: true,
+    nest: true,
   });
   return this.invoice;
 };
@@ -25,6 +27,8 @@ SalesInvoiceRepository.prototype.findAllInvoice = async function () {
         { amount: params.amount ? params.amount : "" },
       ],
     },
+    raw: true,
+    nest: true,
   });
   return this.listInvoices;
 };
@@ -42,6 +46,8 @@ SalesInvoiceRepository.prototype.findAllUsersByPagination = async function (
         { amount: params.amount ? params.amount : "" },
       ],
     },
+    raw: true,
+    nest: true,
     offset: offset,
     limit: limit,
   });

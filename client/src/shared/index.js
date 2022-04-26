@@ -9,4 +9,4 @@ export * from "./FoodTasterReviewModal";
 export * from "./FoodOfficerReviewModal";
 export * from "./SwitchModals";
 export * from "./DataTable";
-export * from "./ProcessStatus";
+export * from "./CardTexts";

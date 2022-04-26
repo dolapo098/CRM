@@ -16,7 +16,10 @@ module.exports = (sequelize, DataTypes) => {
   }
   Product.init(
     {
-      id: DataTypes.STRING,
+      id: {
+        type: DataTypes.STRING,
+        primaryKey: true,
+      },
       name: DataTypes.STRING,
       category: DataTypes.STRING,
       barcode: DataTypes.UUID,

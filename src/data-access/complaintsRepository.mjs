@@ -22,22 +22,6 @@ ComplaintsRepository.prototype.createComplaints = async function (params) {
   return result;
 };
 
-//modify a complaints byupdate
-ComplaintsRepository.prototype.reviewComplaints = async function (params) {
-  //https://sequelize.org/v6/manual/model-querying-basics.html
-  const result = await this.db.Complaints_Workflow.create({
-    initiator: params.initiator,
-    attachmentId: params.attachmentId,
-    salesInvoiceId: params.salesInvoiceId,
-    comment: params.comment,
-    reviewedBy: params.reviewedBy,
-    closedBy: params.closedBy,
-    state: params.state,
-    last_action: params.last_action,
-  });
-  return result;
-};
-
 //get a complaint by id
 ComplaintsRepository.prototype.findComplaintsById = async function (id) {
   //https://sequelize.org/v6/manual/model-querying-basics.html
@@ -45,25 +29,19 @@ ComplaintsRepository.prototype.findComplaintsById = async function (id) {
     where: {
       [Op.or]: [{ id: id }],
     },
+    raw: true,
+    nest: true,
   });
   return result;
 };
 
 //get all complaints
-ComplaintsRepository.prototype.findAllComplaints = async function (params) {
+ComplaintsRepository.prototype.findAllComplaints = async function () {
   //https://sequelize.org/v6/manual/model-querying-basics.html
   const result = await this.db.Complaints_Workflow.findAll({
     order: [["createdAt", "ASC"]],
-    where: {
-      [Op.or]: [
-        {
-          salesInvoiceId: params.salesInvoiceId ? params.salesInvoiceId : null,
-        },
-        { initiator: params.initiator ? params.initiator : null },
-        { closedBy: params.closedBy ? params.closedBy : null },
-        { reviewedBy: params.reviewedBy ? params.reviewedBy : null },
-      ],
-    },
+    raw: true,
+    nest: true,
   });
   return result;
 };
@@ -73,55 +51,64 @@ ComplaintsRepository.prototype.complaintsByPagination = async function (
   params,
   offset,
   limit,
-  status = null
+  state = null
 ) {
   let result;
+  console.log(state);
+  //https://sequelize.org/v6/manual/model-querying-basics.html
+  result = await this.db.Complaints_Workflow.findAndCountAll({
+    order: [["createdAt", "ASC"]],
 
-  if (
-    "salesInvoiceId" in params ||
-    "initiator" in params ||
-    "closedBy" in params ||
-    "reviewedBy" in params
-  ) {
-    //https://sequelize.org/v6/manual/model-querying-basics.html
-    result = await this.db.Complaints_Workflow.findAndCountAll({
-      order: [["createdAt", "ASC"]],
-      where: {
-        status: status,
-        [Op.or]: [
-          {
-            initiator: params.salesInvoiceId ? params.salesInvoiceId : null,
-          },
-          { initiator: params.initiator ? params.initiator : null },
-          { closedBy: params.closedBy ? params.closedBy : null },
-          {
-            reviewedBy: params.reviewedBy ? params.reviewedBy : null,
-          },
-        ],
-      },
-      offset: offset,
-      limit: limit,
-    });
-    return result;
-  } else {
-    result = await this.db.Complaints_Workflow.findAndCountAll({
-      order: [["createdAt", "ASC"]],
-      offset: offset,
-      limit: limit,
-      where: {
-        status: status,
-      },
-    });
-    return result;
-  }
+    where: {
+      state: state,
+      [Op.or]: [
+        {
+          salesInvoiceId: params.salesInvoiceId ? params.salesInvoiceId : null,
+        },
+        { initiator: params.initiator ? params.initiator : null },
+        { closedBy: params.closedBy ? params.closedBy : null },
+        {
+          last_reviewed_by: params.last_reviewed_by
+            ? params.last_reviewed_by
+            : null,
+        },
+      ],
+    },
+    raw: true,
+    nest: true,
+    offset: offset,
+    limit: limit,
+  });
+
+  return result;
 };
 
+ComplaintsRepository.prototype.completeWorkFlow = async function (
+  params,
+  offset,
+  limit,
+  state = null
+) {
+  let result;
+  //https://sequelize.org/v6/manual/model-querying-basics.html
+  result = await this.db.Complaints_Workflow.findAndCountAll({
+    order: [["createdAt", "ASC"]],
+    where: {
+      state: state,
+    },
+    raw: true,
+    nest: true,
+    offset: offset,
+    limit: limit,
+  });
+
+  return result;
+};
 //get all complaints by pagination
 ComplaintsRepository.prototype.complaintsByInitiator = async function (
   params,
   offset,
-  limit,
-  status = null
+  limit
 ) {
   let result;
 
@@ -132,6 +119,8 @@ ComplaintsRepository.prototype.complaintsByInitiator = async function (
       where: {
         initiator: params.initiator,
       },
+      raw: true,
+      nest: true,
       offset: offset,
       limit: limit,
     });
@@ -147,7 +136,6 @@ ComplaintsRepository.prototype.updateComplaints = async function (params, id) {
       [Op.or]: [{ id: id }],
     },
   });
-
   result.set(params);
   await result.save();
   return result;

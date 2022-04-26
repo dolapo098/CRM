@@ -52,7 +52,9 @@ export function FoodOfficerReviewModal(props) {
   //set the approval state workflow beform form is submitted
   const approve = () => {
     if (
-      last_action === appStateData.last_action.approvedByClientEngagementOfficer
+      last_action ===
+        appStateData.last_action.approvedByClientEngagementOfficer ||
+      last_action === appStateData.last_action.rejectedByFoodTaster
     ) {
       setFormData({
         ...formData,
@@ -64,7 +66,9 @@ export function FoodOfficerReviewModal(props) {
   //set the  state the rejected state workflow beform form is submitted
   const reject = () => {
     if (
-      last_action === appStateData.last_action.approvedByClientEngagementOfficer
+      last_action ===
+        appStateData.last_action.approvedByClientEngagementOfficer ||
+      last_action === appStateData.last_action.rejectedByFoodTaster
     ) {
       setFormData({
         ...formData,

@@ -124,7 +124,11 @@ router.get(
 
 router.get(
   "/complete/complaints",
-  Tokenization.authToken(roles.food_taster),
+  Tokenization.authToken([
+    roles.food_taster,
+    roles.client_engagement_officer,
+    roles.food_processing_officer,
+  ]),
   httpRequestCallBack(
     complaintsController.getAllCompleteRequest.bind(complaintsController)
   )

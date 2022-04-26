@@ -9,6 +9,7 @@ export class ComplaintsWorkFlow {
   change(state, params) {
     this.currentState = state;
     this.currentState.approve(params);
+    this.currentState.reject(params);
   }
 
   manageRequest(params) {
@@ -34,12 +35,12 @@ ClientEngagementOfficer.prototype.approve = function (params) {
       params.last_action === last_action.rejectedByFoodProcessingOfficer)
   ) {
     params.last_action = last_action.approvedByClientEngagementOfficer;
-    return params;
   }
-  this._complaintsRequest.change(
-    new FoodProcessingOfficer(this._complaintsRequest),
-    params
-  );
+  return params;
+  // this._complaintsRequest.change(
+  //   new FoodProcessingOfficer(this._complaintsRequest),
+  //   params
+  // );
 };
 
 //reject behavioural pattern
@@ -66,12 +67,12 @@ FoodProcessingOfficer.prototype.approve = function (params) {
       params.last_action === last_action.rejectedByFoodTaster)
   ) {
     params.last_action = last_action.approvedByFoodProcessingOfficer;
-    return params;
   }
-  this._complaintsRequest.change(
-    new FoodTaster(this._complaintsRequest),
-    params
-  );
+  return params;
+  // this._complaintsRequest.change(
+  //   new FoodTaster(this._complaintsRequest),
+  //   params
+  // );
 };
 
 //reject behavioural pattern
@@ -83,7 +84,7 @@ FoodProcessingOfficer.prototype.reject = function (params) {
       params.last_action === last_action.rejectedByFoodTaster)
   ) {
     params.last_action = last_action.rejectedByFoodProcessingOfficer;
-    return params;
+    // return params;
   }
   this._complaintsRequest.change(
     new FoodTaster(this._complaintsRequest),
@@ -105,7 +106,7 @@ FoodTaster.prototype.approve = function (params) {
     params.last_action === last_action.approvedByFoodProcessingOfficer
   ) {
     params.last_action = last_action.approvedByFoodTaster;
-    params.closedBy = params.reviewedBy;
+    params.closedBy = params.last_reviewed_by;
     params.dateClosed = new Date().toISOString();
   }
   return params;

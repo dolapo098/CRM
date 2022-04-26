@@ -27,14 +27,14 @@ UserService.prototype.authenticate = async function (params) {
 
   // The method uses a jsonwebtoken dependency as specified in the helper folder
   const tokenResult = this._tokenization.genToken({
-    id: user.dataValues.id,
-    role: user.dataValues.role,
+    id: user.id,
+    role: user.role,
   });
   if (user !== null && tokenResult !== null) {
     authResult.message = "Login Successful";
     authResult.tokenResult = tokenResult;
-    authResult.role = user.dataValues.role;
-    authResult.user = user.dataValues.firstName;
+    authResult.role = user.role;
+    authResult.user = user.firstName;
     return authResult;
   }
 };

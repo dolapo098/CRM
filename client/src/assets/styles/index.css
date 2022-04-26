@@ -73,3 +73,7 @@ table td {
   white-space: nowrap;
   margin: 5px;
 }
+
+.modal-height {
+  height: 70%;
+}

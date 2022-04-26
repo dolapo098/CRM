@@ -18,7 +18,7 @@ export function RequestModal(props) {
 
   //validate the form fields via formik library
   let validateSchema = yup.object().shape({
-    salesInvoiceId: yup.number().required(),
+    salesInvoiceId: yup.string().required(),
     attachmentId: yup.string(),
     comment: yup.string().required(),
   });
@@ -29,7 +29,8 @@ export function RequestModal(props) {
     { setStatus, setSubmitting }
   ) => {
     setStatus();
-
+    setIsError(false);
+    setIsSuccess(false);
     complaintsService
       .initiateRequest({
         salesInvoiceId,
@@ -39,6 +40,7 @@ export function RequestModal(props) {
       .then(
         (data) => {
           setIsSuccess(true);
+          setIsError(false);
           setStatus("Successful");
           setSubmitting(false);
         },
@@ -60,7 +62,11 @@ export function RequestModal(props) {
   return (
     <React.Fragment>
       <>
-        <Modal show={props.show} onHide={handleClose}>
+        <Modal
+          contentClassName='modal-height'
+          show={props.show}
+          onHide={handleClose}
+        >
           <Modal.Header closeButton>
             <h6>Create New Request</h6>
           </Modal.Header>
@@ -89,7 +95,7 @@ export function RequestModal(props) {
                   />
 
                   <FileUpload getFileId={getAttachmentId} />
-                  <div className='mt-5 '>
+                  <div className='mt-5 mb-2'>
                     <button type='submit' className='btn btn-sm submit w-100'>
                       Send
                     </button>
@@ -103,7 +109,11 @@ export function RequestModal(props) {
                   {isError && (
                     <div className={"alert alert-danger"}>{status}</div>
                   )}
-                  {isSuccess && <div className='text-success '>{status}</div>}
+                  {isSuccess && (
+                    <div className=' mt-1 alert alert-success h-3'>
+                      {status}
+                    </div>
+                  )}
                 </Form>
               )}
             </Formik>{" "}

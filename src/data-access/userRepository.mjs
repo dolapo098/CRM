@@ -20,6 +20,8 @@ UserRepository.prototype.findUser = async function (params) {
         { phoneNumber: params.phoneNumber ? params.phoneNumber : "" },
       ],
     },
+    raw: true,
+    nest: true,
   });
   return user;
 };
@@ -32,6 +34,8 @@ UserRepository.prototype.findUserById = async function (id) {
     where: {
       [Op.or]: [{ id: id }],
     },
+    raw: true,
+    nest: true,
   });
   return result;
 };
@@ -41,6 +45,8 @@ UserRepository.prototype.findAllUsers = async function () {
   //https://sequelize.org/v6/manual/model-querying-basics.html
   const result = await this.db.User.findAll({
     attributes: { exclude: ["password"] },
+    raw: true,
+    nest: true,
   });
   return result;
 };
@@ -78,6 +84,8 @@ UserRepository.prototype.findAllUsersByPagination = async function (
           { phoneNumber: params },
         ],
       },
+      raw: true,
+      nest: true,
       offset: offset,
       limit: limit,
     });
@@ -85,6 +93,8 @@ UserRepository.prototype.findAllUsersByPagination = async function (
   } else {
     result = await this.db.User.findAndCountAll({
       order: [["createdAt", "ASC"]],
+      raw: true,
+      nest: true,
       offset: offset,
       limit: limit,
     });

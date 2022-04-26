@@ -18,6 +18,7 @@ export function CompletedRequests() {
 
   useEffect(() => {
     complaintsService.getAllCompleteRequest({ page, pageSize }).then((res) => {
+      console.log(res);
       setComplaints(res?.data?.items);
       setPageNumber(res?.data?.metaData?.currentPage);
       setPageSize(res?.data?.metaData?.itemsPerPage);

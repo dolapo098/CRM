@@ -112,19 +112,18 @@ export function LeftSideBar() {
                       </a>
                     </li>
                   )}
-                  <li className='w-100 mb-1'>
-                    <a href='/completedrequests' className='nav-link px-0'>
-                      {" "}
-                      <span className='d-none d-sm-inline text-dark'>
-                        <i
-                          className='fa fa-user marginRight'
-                          aria-hidden='true'
-                        ></i>
-                        CompletedRequets
-                      </span>{" "}
-                    </a>
-                  </li>
-                  <li className='w-100 mb-1'>
+                  {!client && (
+                    <li className='w-100 mb-1'>
+                      <a href='/completedrequests' className='nav-link px-0'>
+                        {" "}
+                        <span className='d-none d-sm-inline text-dark'>
+                          <i className='fa-solid fa-receipt marginRight'></i>
+                          Reports
+                        </span>{" "}
+                      </a>
+                    </li>
+                  )}
+                  {/* <li className='w-100 mb-1'>
                     <a href='/' className='nav-link px-0'>
                       {" "}
                       <span className='d-none d-sm-inline text-dark'>
@@ -132,7 +131,7 @@ export function LeftSideBar() {
                         Sales Invoice Logs
                       </span>{" "}
                     </a>
-                  </li>
+                  </li> */}
                   {/* <li className='w-100 mb-1'>
                     <a href='/' className='nav-link px-0'>
                       {" "}

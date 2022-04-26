@@ -26,7 +26,7 @@ ComplaintsController.prototype.makeComplaints = async function (httpRequest) {
 ComplaintsController.prototype.manageRequest = async function (httpRequest) {
   try {
     const data = await this.service.reviewRequest({
-      reviewedBy: httpRequest.loggedinuser.id,
+      last_reviewed_by: httpRequest.loggedinuser.id,
       ...httpRequest.body,
       id: httpRequest.params.id,
     });

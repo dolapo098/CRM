@@ -17,7 +17,10 @@ module.exports = (sequelize, DataTypes) => {
   }
   SalesInvoice.init(
     {
-      id: DataTypes.STRING,
+      id: {
+        type: DataTypes.STRING,
+        primaryKey: true,
+      },
       clientId: DataTypes.INTEGER,
       productId: DataTypes.INTEGER,
       amount: DataTypes.DOUBLE,
