@@ -4,17 +4,19 @@ import { last_action, state } from "../_helper/index.mjs";
 export class ComplaintsWorkFlow {
   constructor() {
     this.currentState = new ClientEngagementOfficer(this);
+    this.count = 0;
   }
 
   change(state, params) {
+    this.count += 1;
     this.currentState = state;
-    this.currentState.approve(params);
-    this.currentState.reject(params);
+    this.currentState.manageRequest(params, this.count);
+    // this.currentState.reject(params);
   }
 
-  manageRequest(params) {
-    this.currentState.approve(params);
-    this.currentState.reject(params);
+  manageRequest(params, count = 0) {
+    this.currentState.manageRequest(params, (this.count = count));
+
     return params;
   }
 }
@@ -27,7 +29,8 @@ class ClientEngagementOfficer {
 }
 
 //approve behavioural pattern
-ClientEngagementOfficer.prototype.approve = function (params) {
+ClientEngagementOfficer.prototype.manageRequest = function (params, count) {
+  if (count >= 3) return params;
   if (
     (params.state === state.awaitngFoodProcessingOfficer &&
       params.last_action === last_action.complaints_initiated) ||
@@ -36,20 +39,19 @@ ClientEngagementOfficer.prototype.approve = function (params) {
   ) {
     params.last_action = last_action.approvedByClientEngagementOfficer;
   }
-  return params;
-  // this._complaintsRequest.change(
-  //   new FoodProcessingOfficer(this._complaintsRequest),
-  //   params
-  // );
-};
-
-//reject behavioural pattern
-ClientEngagementOfficer.prototype.reject = function (params) {
   this._complaintsRequest.change(
     new FoodProcessingOfficer(this._complaintsRequest),
     params
   );
 };
+
+//reject behavioural pattern
+// ClientEngagementOfficer.prototype.reject = function (params) {
+//   this._complaintsRequest.change(
+//     new FoodProcessingOfficer(this._complaintsRequest),
+//     params
+//   );
+// };
 
 //Food processing officer  state
 class FoodProcessingOfficer {
@@ -59,7 +61,8 @@ class FoodProcessingOfficer {
 }
 
 //approve behavioural pattern
-FoodProcessingOfficer.prototype.approve = function (params) {
+FoodProcessingOfficer.prototype.manageRequest = function (params, count) {
+  if (count >= 3) return params;
   if (
     (params.state === state.awaitingFoodTaster &&
       params.last_action === last_action.approvedByClientEngagementOfficer) ||
@@ -67,30 +70,37 @@ FoodProcessingOfficer.prototype.approve = function (params) {
       params.last_action === last_action.rejectedByFoodTaster)
   ) {
     params.last_action = last_action.approvedByFoodProcessingOfficer;
-  }
-  return params;
-  // this._complaintsRequest.change(
-  //   new FoodTaster(this._complaintsRequest),
-  //   params
-  // );
-};
-
-//reject behavioural pattern
-FoodProcessingOfficer.prototype.reject = function (params) {
-  if (
+  } else if (
     (params.state === state.awaitingClientEngagementOfficer &&
       params.last_action === last_action.approvedByClientEngagementOfficer) ||
-    (params.state === state.awaitingFoodTaster &&
+    (params.state === state.awaitingClientEngagementOfficer &&
       params.last_action === last_action.rejectedByFoodTaster)
   ) {
     params.last_action = last_action.rejectedByFoodProcessingOfficer;
-    // return params;
   }
   this._complaintsRequest.change(
     new FoodTaster(this._complaintsRequest),
     params
   );
 };
+
+//reject behavioural pattern
+// FoodProcessingOfficer.prototype.reject = function (params) {
+//   if (
+//     (params.state === state.awaitingClientEngagementOfficer &&
+//       params.last_action === last_action.approvedByClientEngagementOfficer) ||
+//     (params.state === state.awaitingClientEngagementOfficer &&
+//       params.last_action === last_action.rejectedByFoodTaster)
+//   ) {
+//     console.log(" food processing officer 2");
+//     params.last_action = last_action.rejectedByFoodProcessingOfficer;
+//     // return params;
+//   }
+//   this._complaintsRequest.change(
+//     new FoodTaster(this._complaintsRequest),
+//     params
+//   );
+// };
 
 //Food taster state
 class FoodTaster {
@@ -100,25 +110,38 @@ class FoodTaster {
 }
 
 //approve behavioural pattern
-FoodTaster.prototype.approve = function (params) {
+FoodTaster.prototype.manageRequest = function (params, count) {
+  if (count >= 3) return params;
   if (
     params.state === state.complete &&
     params.last_action === last_action.approvedByFoodProcessingOfficer
   ) {
     params.last_action = last_action.approvedByFoodTaster;
     params.closedBy = params.last_reviewed_by;
-    params.dateClosed = new Date().toISOString();
-  }
-  return params;
-};
-
-//reject behavioural pattern
-FoodTaster.prototype.reject = function (params) {
-  if (
+    // params.dateClosed = new Date().toISOString();
+    params.dateClosed = Math.floor(Date.now() / 1000);
+  } else if (
     params.state === state.awaitngFoodProcessingOfficer &&
     params.last_action === last_action.approvedByFoodProcessingOfficer
   ) {
     params.last_action = last_action.rejectedByFoodTaster;
   }
-  return params;
+  this._complaintsRequest.change(
+    new ClientEngagementOfficer(this._complaintsRequest),
+    params
+  );
+  // return params;
 };
+
+//reject behavioural pattern
+// FoodTaster.prototype.reject = function (params) {
+//   if (
+//     params.state === state.awaitngFoodProcessingOfficer &&
+//     params.last_action === last_action.approvedByFoodProcessingOfficer
+//   ) {
+//     console.log(" food taster 2");
+//     params.last_action = last_action.rejectedByFoodTaster;
+//   }
+//   this._complaintsRequest.change(new this._complaintsRequest(), params);
+//   // return params;
+// };

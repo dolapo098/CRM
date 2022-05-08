@@ -49,7 +49,6 @@ ComplaintService.prototype.makeComplaints = async function (params) {
   }
 
   const listInvoice = await this._complaintsRepository.findAllComplaints();
-  console.log("gddd", listInvoice);
   //check if the sales invoice id exist in the complaints table
   listInvoice.forEach((val) => {
     if (val.salesInvoiceId === params.salesInvoiceId) {
@@ -110,12 +109,11 @@ ComplaintService.prototype.reviewRequest = async function (params) {
     last_action: complaint.last_action,
     ...updateProps,
   });
-
+  // return newParams;
   const result = await this._complaintsRepository.updateComplaints(
     newParams,
     id
   );
-
   return result.dataValues;
 };
 
@@ -225,7 +223,6 @@ ComplaintService.prototype.clientOfficerViewComplaints = async function (
 ) {
   let result;
   let reqFields = ["page", "pageSize"];
-  console.log(params);
 
   this._fieldValidator.validateRequiredFields(reqFields, params);
   const { limit, offset } = this._pagination.getPagination(
@@ -239,7 +236,6 @@ ComplaintService.prototype.clientOfficerViewComplaints = async function (
     limit,
     state.awaitingClientEngagementOfficer
   );
-  console.log(state);
 
   if (result === null) {
     const message = "record does not exist ";

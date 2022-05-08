@@ -62,7 +62,6 @@ export function ReviewModal(props) {
     { client_officer_comment },
     { setStatus, setSubmitting }
   ) => {
-    console.log("yanaga");
     setStatus();
     setIsSuccess(false);
     complaintsService.reviewRequest({ id, client_officer_comment, state }).then(

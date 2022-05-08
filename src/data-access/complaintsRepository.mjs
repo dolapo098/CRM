@@ -131,12 +131,15 @@ ComplaintsRepository.prototype.complaintsByInitiator = async function (
 //get a complaint by id and update the new fields
 ComplaintsRepository.prototype.updateComplaints = async function (params, id) {
   //https://sequelize.org/v6/manual/model-querying-basics.html
+
   let result = await this.db.Complaints_Workflow.findOne({
     where: {
       [Op.or]: [{ id: id }],
     },
   });
-  result.set(params);
-  await result.save();
-  return result;
+  if (result) {
+    result.set(params);
+    await result.save();
+    return result;
+  }
 };
